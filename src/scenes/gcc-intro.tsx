@@ -9,49 +9,40 @@ import {
 } from "@motion-canvas/2d";
 import { all, createRef, beginSlide, waitFor } from "@motion-canvas/core";
 import mainCodeExample from "/main_c_code_example.png";
+import {
+  SlideTitle,
+  TerminalCommand,
+  InfoBox,
+  OptionRow,
+  PhaseBox,
+  ComparisonBox,
+} from "../components";
 
 export default makeScene2D(function* (view) {
   // Slide 1: Titolo GCC
-  const title = createRef<Txt>();
-  const subtitle = createRef<Txt>();
+  const titleSlide = SlideTitle({
+    title: "GCC - GNU Compiler Collection",
+    subtitle: "Da codice sorgente a eseguibile",
+    titleColor: "#ce9178",
+    subtitleColor: "#9cdcfe",
+    titleFontSize: 70,
+    subtitleFontSize: 40,
+  });
 
-  view.add(
-    <Txt
-      ref={title}
-      text="GCC - GNU Compiler Collection"
-      fontSize={70}
-      fill={"#ce9178"}
-      fontWeight={700}
-      opacity={0}
-    />,
+  titleSlide.nodes.forEach((node) => node && view.add(node));
+
+  yield* all(
+    titleSlide.titleRef().opacity(1, 1),
+    titleSlide.titleRef().scale(1.1, 0.5).to(1, 0.5),
   );
 
-  view.add(
-    <Txt
-      ref={subtitle}
-      text="Da codice sorgente a eseguibile"
-      fontSize={40}
-      fill={"#9cdcfe"}
-      y={100}
-      opacity={0}
-    />,
-  );
-
-  yield* all(title().opacity(1, 1), title().scale(1.1, 0.5).to(1, 0.5));
-
-  yield* subtitle().opacity(1, 0.8);
+  yield* titleSlide.subtitleRef().opacity(1, 0.8);
 
   yield* beginSlide("GCC - Titolo");
 
   // Slide 2: Storia - GNU vs GCC
   const historyTitle = createRef<Txt>();
-  const gnuBox = createRef<Rect>();
-  const gnuText = createRef<Txt>();
-  const gnuLabel = createRef<Txt>();
   const arrow = createRef<Line>();
-  const gccBox = createRef<Rect>();
-  const gccText = createRef<Txt>();
-  const gccLabel = createRef<Txt>();
 
   view.add(
     <Txt
@@ -64,47 +55,16 @@ export default makeScene2D(function* (view) {
     />,
   );
 
-  // Box GNU (obsoleto)
-  view.add(
-    <Rect
-      ref={gnuBox}
-      width={350}
-      height={200}
-      fill={"#3e3e42"}
-      stroke={"#808080"}
-      lineWidth={3}
-      x={-350}
-      y={0}
-      opacity={0}
-      radius={10}
-    />,
-  );
+  const gnuComp = ComparisonBox({
+    label: "GNU Compiler",
+    status: "Obsoleto",
+    statusIcon: "❌",
+    isActive: false,
+    x: -350,
+    y: 0,
+  });
 
-  view.add(
-    <Txt
-      ref={gnuLabel}
-      text="GNU Compiler"
-      fontSize={32}
-      fill={"#808080"}
-      fontWeight={600}
-      x={-350}
-      y={-60}
-      opacity={0}
-    />,
-  );
-
-  view.add(
-    <Txt
-      ref={gnuText}
-      text="Obsoleto\n❌"
-      fontSize={40}
-      fill={"#f48771"}
-      textAlign={"center"}
-      x={-350}
-      y={30}
-      opacity={0}
-    />,
-  );
+  gnuComp.nodes.forEach((node) => node && view.add(node));
 
   // Freccia
   view.add(
@@ -122,64 +82,36 @@ export default makeScene2D(function* (view) {
     />,
   );
 
-  // Box GCC (attuale)
-  view.add(
-    <Rect
-      ref={gccBox}
-      width={350}
-      height={200}
-      fill={"#1e1e1e"}
-      stroke={"#4ec9b0"}
-      lineWidth={4}
-      x={350}
-      y={0}
-      opacity={0}
-      radius={10}
-    />,
-  );
+  const gccComp = ComparisonBox({
+    label: "GCC",
+    status: "Attuale",
+    statusIcon: "✓",
+    isActive: true,
+    x: 350,
+    y: 0,
+  });
 
-  view.add(
-    <Txt
-      ref={gccLabel}
-      text="GCC"
-      fontSize={32}
-      fill={"#4ec9b0"}
-      fontWeight={700}
-      x={350}
-      y={-60}
-      opacity={0}
-    />,
-  );
+  gccComp.nodes.forEach((node) => node && view.add(node));
 
-  view.add(
-    <Txt
-      ref={gccText}
-      text="Attuale\n✓"
-      fontSize={40}
-      fill={"#4ec9b0"}
-      textAlign={"center"}
-      x={350}
-      y={30}
-      opacity={0}
-    />,
+  yield* all(
+    titleSlide.titleRef().opacity(0, 0.5),
+    titleSlide.subtitleRef().opacity(0, 0.5),
   );
-
-  yield* all(title().opacity(0, 0.5), subtitle().opacity(0, 0.5));
 
   yield* historyTitle().opacity(1, 0.8);
 
   yield* all(
-    gnuBox().opacity(1, 0.6),
-    gnuLabel().opacity(1, 0.6),
-    gnuText().opacity(1, 0.6),
+    gnuComp.boxRef().opacity(1, 0.6),
+    gnuComp.labelRef().opacity(1, 0.6),
+    gnuComp.statusRef().opacity(1, 0.6),
   );
 
   yield* arrow().opacity(1, 0.6);
 
   yield* all(
-    gccBox().opacity(1, 0.6),
-    gccLabel().opacity(1, 0.6),
-    gccText().opacity(1, 0.6),
+    gccComp.boxRef().opacity(1, 0.6),
+    gccComp.labelRef().opacity(1, 0.6),
+    gccComp.statusRef().opacity(1, 0.6),
   );
 
   yield* beginSlide("GNU vs GCC");
@@ -224,13 +156,13 @@ export default makeScene2D(function* (view) {
 
   yield* all(
     historyTitle().opacity(0, 0.5),
-    gnuBox().opacity(0, 0.5),
-    gnuLabel().opacity(0, 0.5),
-    gnuText().opacity(0, 0.5),
+    gnuComp.boxRef().opacity(0, 0.5),
+    gnuComp.labelRef().opacity(0, 0.5),
+    gnuComp.statusRef().opacity(0, 0.5),
     arrow().opacity(0, 0.5),
-    gccBox().opacity(0, 0.5),
-    gccLabel().opacity(0, 0.5),
-    gccText().opacity(0, 0.5),
+    gccComp.boxRef().opacity(0, 0.5),
+    gccComp.labelRef().opacity(0, 0.5),
+    gccComp.statusRef().opacity(0, 0.5),
   );
 
   yield* codeTitle().opacity(1, 0.8);
@@ -241,10 +173,6 @@ export default makeScene2D(function* (view) {
 
   // Slide 4: Comando Base GCC
   const cmdTitle = createRef<Txt>();
-  const terminalBox = createRef<Rect>();
-  const prompt = createRef<Txt>();
-  const command = createRef<Txt>();
-  const explanation = createRef<Txt>();
 
   view.add(
     <Txt
@@ -257,56 +185,12 @@ export default makeScene2D(function* (view) {
     />,
   );
 
-  view.add(
-    <Rect
-      ref={terminalBox}
-      width={900}
-      height={200}
-      fill={"#1e1e1e"}
-      stroke={"#3e3e42"}
-      lineWidth={3}
-      y={0}
-      opacity={0}
-      radius={10}
-    />,
-  );
+  const terminalCmd = TerminalCommand({
+    command: "gcc main.c",
+    description: "Compila main.c → crea a.out",
+  });
 
-  view.add(
-    <Txt
-      ref={prompt}
-      text="$"
-      fontSize={40}
-      fill={"#4ec9b0"}
-      fontFamily={"monospace"}
-      x={-420}
-      y={0}
-      opacity={0}
-    />,
-  );
-
-  view.add(
-    <Txt
-      ref={command}
-      text="gcc main.c"
-      fontSize={40}
-      fill={"#ce9178"}
-      fontFamily={"monospace"}
-      x={-250}
-      y={0}
-      opacity={0}
-    />,
-  );
-
-  view.add(
-    <Txt
-      ref={explanation}
-      text="Compila main.c → crea a.out"
-      fontSize={32}
-      fill={"#9cdcfe"}
-      y={200}
-      opacity={0}
-    />,
-  );
+  terminalCmd.nodes.forEach((node) => node && view.add(node));
 
   yield* all(
     codeTitle().opacity(0, 0.5),
@@ -315,24 +199,15 @@ export default makeScene2D(function* (view) {
   );
 
   yield* cmdTitle().opacity(1, 0.8);
-  yield* terminalBox().opacity(1, 0.6);
-  yield* prompt().opacity(1, 0.4);
-  yield* command().opacity(1, 0.6);
-  yield* explanation().opacity(1, 0.6);
+  yield* terminalCmd.boxRef().opacity(1, 0.6);
+  yield* terminalCmd.promptRef().opacity(1, 0.4);
+  yield* terminalCmd.commandRef().opacity(1, 0.6);
+  yield* terminalCmd.descRef().opacity(1, 0.6);
 
   yield* beginSlide("Comando Base");
 
   // Slide 5: Opzioni Comuni
   const optionsTitle = createRef<Txt>();
-  const option1Box = createRef<Rect>();
-  const option1Cmd = createRef<Txt>();
-  const option1Desc = createRef<Txt>();
-  const option2Box = createRef<Rect>();
-  const option2Cmd = createRef<Txt>();
-  const option2Desc = createRef<Txt>();
-  const option3Box = createRef<Rect>();
-  const option3Cmd = createRef<Txt>();
-  const option3Desc = createRef<Txt>();
 
   view.add(
     <Txt
@@ -345,152 +220,56 @@ export default makeScene2D(function* (view) {
     />,
   );
 
-  // Opzione -o
-  view.add(
-    <Rect
-      ref={option1Box}
-      width={850}
-      height={80}
-      fill={"#1e1e1e"}
-      stroke={"#3e3e42"}
-      lineWidth={2}
-      y={-150}
-      opacity={0}
-      radius={6}
-    />,
-  );
+  const option1 = OptionRow({
+    command: "gcc main.c -o program",
+    description: "Specifica nome output",
+    y: -150,
+  });
 
-  view.add(
-    <Txt
-      ref={option1Cmd}
-      text="gcc main.c -o program"
-      fontSize={32}
-      fill={"#ce9178"}
-      fontFamily={"monospace"}
-      x={-200}
-      y={-150}
-      opacity={0}
-    />,
-  );
+  option1.nodes.forEach((node) => node && view.add(node));
 
-  view.add(
-    <Txt
-      ref={option1Desc}
-      text="Specifica nome output"
-      fontSize={28}
-      fill={"#9cdcfe"}
-      x={250}
-      y={-150}
-      opacity={0}
-    />,
-  );
+  const option2 = OptionRow({
+    command: "gcc main.c -Wall",
+    description: "Mostra tutti i warning",
+    y: -40,
+  });
 
-  // Opzione -Wall
-  view.add(
-    <Rect
-      ref={option2Box}
-      width={850}
-      height={80}
-      fill={"#1e1e1e"}
-      stroke={"#3e3e42"}
-      lineWidth={2}
-      y={-40}
-      opacity={0}
-      radius={6}
-    />,
-  );
+  option2.nodes.forEach((node) => node && view.add(node));
 
-  view.add(
-    <Txt
-      ref={option2Cmd}
-      text="gcc main.c -Wall"
-      fontSize={32}
-      fill={"#ce9178"}
-      fontFamily={"monospace"}
-      x={-220}
-      y={-40}
-      opacity={0}
-    />,
-  );
+  const option3 = OptionRow({
+    command: "gcc main.c -g",
+    description: "Debug symbols",
+    y: 70,
+  });
 
-  view.add(
-    <Txt
-      ref={option2Desc}
-      text="Mostra tutti i warning"
-      fontSize={28}
-      fill={"#9cdcfe"}
-      x={250}
-      y={-40}
-      opacity={0}
-    />,
-  );
-
-  // Opzione -g
-  view.add(
-    <Rect
-      ref={option3Box}
-      width={850}
-      height={80}
-      fill={"#1e1e1e"}
-      stroke={"#3e3e42"}
-      lineWidth={2}
-      y={70}
-      opacity={0}
-      radius={6}
-    />,
-  );
-
-  view.add(
-    <Txt
-      ref={option3Cmd}
-      text="gcc main.c -g"
-      fontSize={32}
-      fill={"#ce9178"}
-      fontFamily={"monospace"}
-      x={-240}
-      y={70}
-      opacity={0}
-    />,
-  );
-
-  view.add(
-    <Txt
-      ref={option3Desc}
-      text="Debug symbols"
-      fontSize={28}
-      fill={"#9cdcfe"}
-      x={250}
-      y={70}
-      opacity={0}
-    />,
-  );
+  option3.nodes.forEach((node) => node && view.add(node));
 
   yield* all(
     cmdTitle().opacity(0, 0.5),
-    terminalBox().opacity(0, 0.5),
-    prompt().opacity(0, 0.5),
-    command().opacity(0, 0.5),
-    explanation().opacity(0, 0.5),
+    terminalCmd.boxRef().opacity(0, 0.5),
+    terminalCmd.promptRef().opacity(0, 0.5),
+    terminalCmd.commandRef().opacity(0, 0.5),
+    terminalCmd.descRef().opacity(0, 0.5),
   );
 
   yield* optionsTitle().opacity(1, 0.8);
 
   yield* all(
-    option1Box().opacity(1, 0.5),
-    option1Cmd().opacity(1, 0.5),
-    option1Desc().opacity(1, 0.5),
+    option1.boxRef().opacity(1, 0.5),
+    option1.cmdRef().opacity(1, 0.5),
+    option1.descRef().opacity(1, 0.5),
   );
 
   yield* all(
-    option2Box().opacity(1, 0.5),
-    option2Cmd().opacity(1, 0.5),
-    option2Desc().opacity(1, 0.5),
+    option2.boxRef().opacity(1, 0.5),
+    option2.cmdRef().opacity(1, 0.5),
+    option2.descRef().opacity(1, 0.5),
   );
 
   yield* all(
-    option3Box().opacity(1, 0.5),
-    option3Cmd().opacity(1, 0.5),
-    option3Desc().opacity(1, 0.5),
+    option3.boxRef().opacity(1, 0.5),
+    option3.cmdRef().opacity(1, 0.5),
+    option3.descRef().opacity(1, 0.5),
   );
 
   yield* beginSlide("Opzioni Comuni");
@@ -517,11 +296,11 @@ export default makeScene2D(function* (view) {
     <Rect
       ref={stepBox}
       width={900}
-      height={400}
+      height={350}
       fill={"#252526"}
       stroke={"#3e3e42"}
       lineWidth={3}
-      y={50}
+      y={0}
       opacity={0}
       radius={10}
     />,
@@ -565,15 +344,15 @@ export default makeScene2D(function* (view) {
 
   yield* all(
     optionsTitle().opacity(0, 0.5),
-    option1Box().opacity(0, 0.5),
-    option1Cmd().opacity(0, 0.5),
-    option1Desc().opacity(0, 0.5),
-    option2Box().opacity(0, 0.5),
-    option2Cmd().opacity(0, 0.5),
-    option2Desc().opacity(0, 0.5),
-    option3Box().opacity(0, 0.5),
-    option3Cmd().opacity(0, 0.5),
-    option3Desc().opacity(0, 0.5),
+    option1.boxRef().opacity(0, 0.5),
+    option1.cmdRef().opacity(0, 0.5),
+    option1.descRef().opacity(0, 0.5),
+    option2.boxRef().opacity(0, 0.5),
+    option2.cmdRef().opacity(0, 0.5),
+    option2.descRef().opacity(0, 0.5),
+    option3.boxRef().opacity(0, 0.5),
+    option3.cmdRef().opacity(0, 0.5),
+    option3.descRef().opacity(0, 0.5),
   );
 
   yield* exampleTitle().opacity(1, 0.8);
@@ -586,15 +365,6 @@ export default makeScene2D(function* (view) {
 
   // Slide 7: Processo di Compilazione
   const processTitle = createRef<Txt>();
-  const sourceBox = createRef<Rect>();
-  const sourceText = createRef<Txt>();
-  const sourceDesc = createRef<Txt>();
-  const compilerBox = createRef<Rect>();
-  const compilerText = createRef<Txt>();
-  const compilerDesc = createRef<Txt>();
-  const execBox = createRef<Rect>();
-  const execText = createRef<Txt>();
-  const execDesc = createRef<Txt>();
   const arrow1 = createRef<Line>();
   const arrow2 = createRef<Line>();
 
@@ -609,47 +379,16 @@ export default makeScene2D(function* (view) {
     />,
   );
 
-  // Source code
-  view.add(
-    <Rect
-      ref={sourceBox}
-      width={200}
-      height={150}
-      fill={"#264f78"}
-      stroke={"#569cd6"}
-      lineWidth={3}
-      x={-400}
-      y={20}
-      opacity={0}
-      radius={8}
-    />,
-  );
+  const sourceInfo = InfoBox({
+    title: "main.c",
+    content: "📄",
+    color: "#569cd6",
+    x: -400,
+    y: 20,
+    description: "Codice sorgente",
+  });
 
-  view.add(
-    <Txt
-      ref={sourceText}
-      text="main.c\n📄"
-      fontSize={36}
-      fill={"#ffffff"}
-      textAlign={"center"}
-      x={-400}
-      y={20}
-      opacity={0}
-    />,
-  );
-
-  view.add(
-    <Txt
-      ref={sourceDesc}
-      text="Codice sorgente"
-      fontSize={22}
-      fill={"#9cdcfe"}
-      textAlign={"center"}
-      x={-400}
-      y={130}
-      opacity={0}
-    />,
-  );
+  sourceInfo.nodes.forEach((node) => node && view.add(node));
 
   // Arrow 1
   view.add(
@@ -667,47 +406,17 @@ export default makeScene2D(function* (view) {
     />,
   );
 
-  // Compiler
-  view.add(
-    <Rect
-      ref={compilerBox}
-      width={200}
-      height={150}
-      fill={"#1a472a"}
-      stroke={"#4ec9b0"}
-      lineWidth={3}
-      x={0}
-      y={20}
-      opacity={0}
-      radius={8}
-    />,
-  );
+  const compilerInfo = InfoBox({
+    title: "GCC",
+    content: "⚙️",
+    icon: "",
+    color: "#4ec9b0",
+    x: 0,
+    y: 20,
+    description: "Compilatore",
+  });
 
-  view.add(
-    <Txt
-      ref={compilerText}
-      text="GCC\n⚙️"
-      fontSize={36}
-      fill={"#ffffff"}
-      textAlign={"center"}
-      x={0}
-      y={20}
-      opacity={0}
-    />,
-  );
-
-  view.add(
-    <Txt
-      ref={compilerDesc}
-      text="Compilatore"
-      fontSize={22}
-      fill={"#9cdcfe"}
-      textAlign={"center"}
-      x={0}
-      y={130}
-      opacity={0}
-    />,
-  );
+  compilerInfo.nodes.forEach((node) => node && view.add(node));
 
   // Arrow 2
   view.add(
@@ -725,47 +434,16 @@ export default makeScene2D(function* (view) {
     />,
   );
 
-  // Executable
-  view.add(
-    <Rect
-      ref={execBox}
-      width={200}
-      height={150}
-      fill={"#4d1f00"}
-      stroke={"#ce9178"}
-      lineWidth={3}
-      x={400}
-      y={20}
-      opacity={0}
-      radius={8}
-    />,
-  );
+  const execInfo = InfoBox({
+    title: "a.out",
+    content: "🚀",
+    color: "#ce9178",
+    x: 400,
+    y: 20,
+    description: "Eseguibile",
+  });
 
-  view.add(
-    <Txt
-      ref={execText}
-      text="a.out\n🚀"
-      fontSize={36}
-      fill={"#ffffff"}
-      textAlign={"center"}
-      x={400}
-      y={20}
-      opacity={0}
-    />,
-  );
-
-  view.add(
-    <Txt
-      ref={execDesc}
-      text="Eseguibile"
-      fontSize={22}
-      fill={"#9cdcfe"}
-      textAlign={"center"}
-      x={400}
-      y={130}
-      opacity={0}
-    />,
-  );
+  execInfo.nodes.forEach((node) => node && view.add(node));
 
   yield* all(
     exampleTitle().opacity(0, 0.5),
@@ -778,25 +456,28 @@ export default makeScene2D(function* (view) {
   yield* processTitle().opacity(1, 0.8);
 
   yield* all(
-    sourceBox().opacity(1, 0.6),
-    sourceText().opacity(1, 0.6),
-    sourceDesc().opacity(1, 0.6),
+    sourceInfo.boxRef().opacity(1, 0.6),
+    sourceInfo.titleRef().opacity(1, 0.6),
+    sourceInfo.contentRef().opacity(1, 0.6),
+    sourceInfo.descRef().opacity(1, 0.6),
   );
 
   yield* arrow1().opacity(1, 0.5);
 
   yield* all(
-    compilerBox().opacity(1, 0.6),
-    compilerText().opacity(1, 0.6),
-    compilerDesc().opacity(1, 0.6),
+    compilerInfo.boxRef().opacity(1, 0.6),
+    compilerInfo.titleRef().opacity(1, 0.6),
+    compilerInfo.contentRef().opacity(1, 0.6),
+    compilerInfo.descRef().opacity(1, 0.6),
   );
 
   yield* arrow2().opacity(1, 0.5);
 
   yield* all(
-    execBox().opacity(1, 0.6),
-    execText().opacity(1, 0.6),
-    execDesc().opacity(1, 0.6),
+    execInfo.boxRef().opacity(1, 0.6),
+    execInfo.titleRef().opacity(1, 0.6),
+    execInfo.contentRef().opacity(1, 0.6),
+    execInfo.descRef().opacity(1, 0.6),
   );
 
   yield* beginSlide("Processo di Compilazione");
@@ -805,26 +486,6 @@ export default makeScene2D(function* (view) {
   const phasesTitle = createRef<Txt>();
   const phasesSubtitle = createRef<Txt>();
   const containerBox = createRef<Rect>();
-
-  // Pre-Processor
-  const preBox = createRef<Rect>();
-  const preText = createRef<Txt>();
-  const preDesc = createRef<Txt>();
-
-  // Compiler
-  const compBox = createRef<Rect>();
-  const compText = createRef<Txt>();
-  const compDesc = createRef<Txt>();
-
-  // Assembler
-  const asmBox = createRef<Rect>();
-  const asmText = createRef<Txt>();
-  const asmDesc = createRef<Txt>();
-
-  // Linker
-  const linkBox = createRef<Rect>();
-  const linkText = createRef<Txt>();
-  const linkDesc = createRef<Txt>();
 
   // Arrows between phases
   const arrowPre = createRef<Line>();
@@ -889,48 +550,15 @@ export default makeScene2D(function* (view) {
   );
 
   // 1. Pre-Processor
-  view.add(
-    <Rect
-      ref={preBox}
-      width={260}
-      height={200}
-      fill={"#3e3e42"}
-      stroke={"#569cd6"}
-      lineWidth={2}
-      x={-405}
-      y={50}
-      opacity={0}
-      radius={8}
-    />,
-  );
+  const prePhase = PhaseBox({
+    title: "Pre-Processor",
+    description: "#include\n#define\nmacro",
+    color: "#569cd6",
+    x: -405,
+    y: 50,
+  });
 
-  view.add(
-    <Txt
-      ref={preText}
-      text="Pre-Processor"
-      fontSize={24}
-      fill={"#569cd6"}
-      fontWeight={600}
-      textAlign={"center"}
-      x={-405}
-      y={-10}
-      opacity={0}
-    />,
-  );
-
-  view.add(
-    <Txt
-      ref={preDesc}
-      text="#include\n#define\nmacro"
-      fontSize={20}
-      fill={"#9cdcfe"}
-      textAlign={"center"}
-      lineHeight={32}
-      x={-405}
-      y={60}
-      opacity={0}
-    />,
-  );
+  prePhase.nodes.forEach((node) => node && view.add(node));
 
   // Arrow 1
   view.add(
@@ -949,48 +577,15 @@ export default makeScene2D(function* (view) {
   );
 
   // 2. Compiler
-  view.add(
-    <Rect
-      ref={compBox}
-      width={260}
-      height={200}
-      fill={"#3e3e42"}
-      stroke={"#4ec9b0"}
-      lineWidth={2}
-      x={-135}
-      y={50}
-      opacity={0}
-      radius={8}
-    />,
-  );
+  const compPhase = PhaseBox({
+    title: "Compiler",
+    description: "C code\n→\nAssembly",
+    color: "#4ec9b0",
+    x: -135,
+    y: 50,
+  });
 
-  view.add(
-    <Txt
-      ref={compText}
-      text="Compiler"
-      fontSize={24}
-      fill={"#4ec9b0"}
-      fontWeight={600}
-      textAlign={"center"}
-      x={-135}
-      y={-10}
-      opacity={0}
-    />,
-  );
-
-  view.add(
-    <Txt
-      ref={compDesc}
-      text="C code\n→\nAssembly"
-      fontSize={20}
-      fill={"#9cdcfe"}
-      textAlign={"center"}
-      lineHeight={32}
-      x={-135}
-      y={60}
-      opacity={0}
-    />,
-  );
+  compPhase.nodes.forEach((node) => node && view.add(node));
 
   // Arrow 2
   view.add(
@@ -1009,48 +604,15 @@ export default makeScene2D(function* (view) {
   );
 
   // 3. Assembler
-  view.add(
-    <Rect
-      ref={asmBox}
-      width={260}
-      height={200}
-      fill={"#3e3e42"}
-      stroke={"#c586c0"}
-      lineWidth={2}
-      x={135}
-      y={50}
-      opacity={0}
-      radius={8}
-    />,
-  );
+  const asmPhase = PhaseBox({
+    title: "Assembler",
+    description: "Assembly\n→\nMachine code",
+    color: "#c586c0",
+    x: 135,
+    y: 50,
+  });
 
-  view.add(
-    <Txt
-      ref={asmText}
-      text="Assembler"
-      fontSize={24}
-      fill={"#c586c0"}
-      fontWeight={600}
-      textAlign={"center"}
-      x={135}
-      y={-10}
-      opacity={0}
-    />,
-  );
-
-  view.add(
-    <Txt
-      ref={asmDesc}
-      text="Assembly\n→\nMachine code"
-      fontSize={20}
-      fill={"#9cdcfe"}
-      textAlign={"center"}
-      lineHeight={32}
-      x={135}
-      y={60}
-      opacity={0}
-    />,
-  );
+  asmPhase.nodes.forEach((node) => node && view.add(node));
 
   // Arrow 3
   view.add(
@@ -1069,48 +631,15 @@ export default makeScene2D(function* (view) {
   );
 
   // 4. Linker
-  view.add(
-    <Rect
-      ref={linkBox}
-      width={260}
-      height={200}
-      fill={"#3e3e42"}
-      stroke={"#ce9178"}
-      lineWidth={2}
-      x={405}
-      y={50}
-      opacity={0}
-      radius={8}
-    />,
-  );
+  const linkPhase = PhaseBox({
+    title: "Linker",
+    description: "Links\nlibraries\n& objects",
+    color: "#ce9178",
+    x: 405,
+    y: 50,
+  });
 
-  view.add(
-    <Txt
-      ref={linkText}
-      text="Linker"
-      fontSize={24}
-      fill={"#ce9178"}
-      fontWeight={600}
-      textAlign={"center"}
-      x={405}
-      y={-10}
-      opacity={0}
-    />,
-  );
-
-  view.add(
-    <Txt
-      ref={linkDesc}
-      text="Links\nlibraries\n& objects"
-      fontSize={20}
-      fill={"#9cdcfe"}
-      textAlign={"center"}
-      lineHeight={32}
-      x={405}
-      y={60}
-      opacity={0}
-    />,
-  );
+  linkPhase.nodes.forEach((node) => node && view.add(node));
 
   // Arrow OUT (destra)
   view.add(
@@ -1131,17 +660,20 @@ export default makeScene2D(function* (view) {
   // Nascondi slide precedente
   yield* all(
     processTitle().opacity(0, 0.5),
-    sourceBox().opacity(0, 0.5),
-    sourceText().opacity(0, 0.5),
-    sourceDesc().opacity(0, 0.5),
+    sourceInfo.boxRef().opacity(0, 0.5),
+    sourceInfo.titleRef().opacity(0, 0.5),
+    sourceInfo.contentRef().opacity(0, 0.5),
+    sourceInfo.descRef().opacity(0, 0.5),
     arrow1().opacity(0, 0.5),
-    compilerBox().opacity(0, 0.5),
-    compilerText().opacity(0, 0.5),
-    compilerDesc().opacity(0, 0.5),
+    compilerInfo.boxRef().opacity(0, 0.5),
+    compilerInfo.titleRef().opacity(0, 0.5),
+    compilerInfo.contentRef().opacity(0, 0.5),
+    compilerInfo.descRef().opacity(0, 0.5),
     arrow2().opacity(0, 0.5),
-    execBox().opacity(0, 0.5),
-    execText().opacity(0, 0.5),
-    execDesc().opacity(0, 0.5),
+    execInfo.boxRef().opacity(0, 0.5),
+    execInfo.titleRef().opacity(0, 0.5),
+    execInfo.contentRef().opacity(0, 0.5),
+    execInfo.descRef().opacity(0, 0.5),
   );
 
   // Mostra titoli
@@ -1156,9 +688,9 @@ export default makeScene2D(function* (view) {
 
   // Fase 1: Pre-Processor
   yield* all(
-    preBox().opacity(1, 0.6),
-    preText().opacity(1, 0.6),
-    preDesc().opacity(1, 0.6),
+    prePhase.boxRef().opacity(1, 0.6),
+    prePhase.titleRef().opacity(1, 0.6),
+    prePhase.descRef().opacity(1, 0.6),
   );
   yield* arrowPre().opacity(1, 0.4);
 
@@ -1166,9 +698,9 @@ export default makeScene2D(function* (view) {
 
   // Fase 2: Compiler
   yield* all(
-    compBox().opacity(1, 0.6),
-    compText().opacity(1, 0.6),
-    compDesc().opacity(1, 0.6),
+    compPhase.boxRef().opacity(1, 0.6),
+    compPhase.titleRef().opacity(1, 0.6),
+    compPhase.descRef().opacity(1, 0.6),
   );
   yield* arrowComp().opacity(1, 0.4);
 
@@ -1176,9 +708,9 @@ export default makeScene2D(function* (view) {
 
   // Fase 3: Assembler
   yield* all(
-    asmBox().opacity(1, 0.6),
-    asmText().opacity(1, 0.6),
-    asmDesc().opacity(1, 0.6),
+    asmPhase.boxRef().opacity(1, 0.6),
+    asmPhase.titleRef().opacity(1, 0.6),
+    asmPhase.descRef().opacity(1, 0.6),
   );
   yield* arrowAsm().opacity(1, 0.4);
 
@@ -1186,9 +718,9 @@ export default makeScene2D(function* (view) {
 
   // Fase 4: Linker
   yield* all(
-    linkBox().opacity(1, 0.6),
-    linkText().opacity(1, 0.6),
-    linkDesc().opacity(1, 0.6),
+    linkPhase.boxRef().opacity(1, 0.6),
+    linkPhase.titleRef().opacity(1, 0.6),
+    linkPhase.descRef().opacity(1, 0.6),
   );
   yield* arrowOut().opacity(1, 0.5);
 
