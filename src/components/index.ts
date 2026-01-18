@@ -16,3 +16,9 @@ export type { PhaseBoxProps } from "./PhaseBox";
 
 export { ComparisonBox } from "./ComparisonBox";
 export type { ComparisonBoxProps } from "./ComparisonBox";
+
+export { ExecutableBox } from "./ExecutableBox";
+export type { ExecutableBoxProps } from "./ExecutableBox";
+
+export { SourceCodeBox } from "./SourceCodeBox";
+export type { SourceCodeBoxProps } from "./SourceCodeBox";

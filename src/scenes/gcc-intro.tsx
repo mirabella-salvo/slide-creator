@@ -16,6 +16,8 @@ import {
   OptionRow,
   PhaseBox,
   ComparisonBox,
+  ExecutableBox,
+  SourceCodeBox,
 } from "../components";
 
 export default makeScene2D(function* (view) {
@@ -533,12 +535,21 @@ export default makeScene2D(function* (view) {
     />,
   );
 
+  // Source code box (sinistra)
+  const sourceCodeBox = SourceCodeBox({
+    filename: "main.c",
+    x: -780,
+    y: 50,
+  });
+
+  sourceCodeBox.nodes.forEach((node) => node && view.add(node));
+
   // Arrow IN (sinistra)
   view.add(
     <Line
       ref={arrowIn}
       points={[
-        [-720, 50],
+        [-700, 50],
         [-600, 50],
       ]}
       stroke={"#ffffff"}
@@ -647,7 +658,7 @@ export default makeScene2D(function* (view) {
       ref={arrowOut}
       points={[
         [545, 50],
-        [670, 50],
+        [620, 50],
       ]}
       stroke={"#ffffff"}
       lineWidth={5}
@@ -656,6 +667,15 @@ export default makeScene2D(function* (view) {
       opacity={0}
     />,
   );
+
+  // Eseguibile finale
+  const executableBox = ExecutableBox({
+    filename: "main",
+    x: 750,
+    y: 50,
+  });
+
+  executableBox.nodes.forEach((node) => node && view.add(node));
 
   // Nascondi slide precedente
   yield* all(
@@ -680,8 +700,25 @@ export default makeScene2D(function* (view) {
   yield* phasesTitle().opacity(1, 0.8);
   yield* phasesSubtitle().opacity(1, 0.6);
 
-  // Mostra container e arrow in
+  // Mostra container
   yield* containerBox().opacity(1, 0.6);
+
+  // Mostra source code box
+  yield* all(
+    sourceCodeBox.containerRef().opacity(1, 0.6),
+    sourceCodeBox.iconRef().opacity(1, 0.6),
+    sourceCodeBox.filenameRef().opacity(1, 0.6),
+  );
+
+  // Mostra le linee di codice una alla volta
+  yield* sourceCodeBox.line1Ref().opacity(1, 0.3);
+  yield* sourceCodeBox.line2Ref().opacity(1, 0.3);
+  yield* sourceCodeBox.line3Ref().opacity(1, 0.3);
+  yield* sourceCodeBox.line4Ref().opacity(1, 0.3);
+  yield* sourceCodeBox.line5Ref().opacity(1, 0.3);
+  yield* sourceCodeBox.line6Ref().opacity(1, 0.3);
+
+  // Mostra arrow in
   yield* arrowIn().opacity(1, 0.5);
 
   yield* beginSlide("Container");
@@ -725,4 +762,13 @@ export default makeScene2D(function* (view) {
   yield* arrowOut().opacity(1, 0.5);
 
   yield* beginSlide("Linker");
+
+  // Mostra eseguibile finale
+  yield* all(
+    executableBox.boxRef().opacity(1, 0.6),
+    executableBox.iconRef().opacity(1, 0.6),
+    executableBox.exeLabelRef().opacity(1, 0.6),
+    executableBox.filenameRef().opacity(1, 0.6),
+  );
+  yield* beginSlide("Eseguibile Finale");
 });
