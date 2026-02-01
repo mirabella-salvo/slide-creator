@@ -18,8 +18,8 @@ export function PhaseBox(props: PhaseBoxProps) {
     color,
     x = 0,
     y = 50,
-    width = 260,
-    height = 200,
+    width = 180,
+    height = 150,
   } = props;
 
   const boxRef = createRef<Rect>();

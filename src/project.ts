@@ -11,8 +11,8 @@ export default makeProject({
   // Aggiungi qui le scene che vuoi usare
   // Puoi commentare/decommentare per switchare rapidamente
   scenes: [
-    stack,
     gccIntro,
+    stack,
     // presentazioneGenerale,
     // presentazioneTecnica,
     // presentazioneMarketing,

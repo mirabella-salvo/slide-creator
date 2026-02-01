@@ -22,3 +22,6 @@ export type { ExecutableBoxProps } from "./ExecutableBox";
 
 export { SourceCodeBox } from "./SourceCodeBox";
 export type { SourceCodeBoxProps } from "./SourceCodeBox";
+
+export { GearIcon } from "./GearIcon";
+export type { GearIconProps, GearIconResult } from "./GearIcon";
