@@ -1,108 +1,104 @@
-import { Rect, makeScene2D, Txt, Line, Layout } from "@motion-canvas/2d";
+import { Rect, makeScene2D, Txt, Line } from "@motion-canvas/2d";
 import {
   all,
   createRef,
   beginSlide,
   createRefArray,
-  Reference,
 } from "@motion-canvas/core";
 
 export default makeScene2D(function* (view) {
-  // Configurazione stack
-  const cellHeight = 40;
-  const cellWidth = 180;
-  const startY = -280; // Y iniziale per 0xFFF2
-  const startX = 100; // X per i rettangoli
-  const addressX = -50; // X per gli indirizzi
+  // ============ CONFIGURAZIONE ============
 
-  // Array di indirizzi di memoria (dal più basso al più alto)
-  const addresses = [
-    "0xFFF2",
-    "0xFFF3",
-    "0xFFF4",
-    "0xFFF5",
-    "0xFFF6",
-    "0xFFF7",
-    "0xFFF8",
-    "0xFFF9",
-    "0xFFFA",
-    "0xFFFB",
-    "0xFFFC",
-    "0xFFFD",
-    "0xFFFE",
-    "0xFFFF",
+  // Stack (sinistra)
+  const stackX = -420;
+  const stackCellWidth = 140;
+  const stackCellHeight = 40;
+  const stackStartY = -200;
+  const addressX = stackX - stackCellWidth / 2 - 70;
+
+  // Code box (destra)
+  const codeBoxX = 280;
+  const codeBoxY = -80;
+  const codeBoxWidth = 480;
+  const codeBoxHeight = 380;
+
+  // Registers (in basso)
+  const regY = 330;
+  const regBoxWidth = 110;
+  const regBoxHeight = 70;
+  const regStartX = -400;
+  const regSpacing = 130;
+
+  // Indirizzi di memoria stack (dal più alto al più basso per visualizzazione)
+  const stackAddresses = [
+    { addr: "0xFFF8", index: 0 },
+    { addr: "0xFFF0", index: 1 },
+    { addr: "0xFFE8", index: 2 },
+    { addr: "0xFFE0", index: 3 },
+    { addr: "0xFFD8", index: 4 },
+    { addr: "0xFFD0", index: 5 },
   ];
 
-  // Refs
-  const stackPointerLabel = createRef<Txt>();
-  const basePointerLabel = createRef<Txt>();
-  const addressLabels = createRefArray<Txt>();
+  // ============ REFS ============
+
+  // Stack
+  const stackTitle = createRef<Txt>();
   const stackCells = createRefArray<Rect>();
-  const newStackCells = createRefArray<Rect>();
-  const frameIndicator = createRef<Layout>();
-  const frameTop = createRef<Line>();
-  const frameSide = createRef<Line>();
-  const frameBottom = createRef<Line>();
-  const previewLabel = createRef<Txt>();
+  const stackCellValues = createRefArray<Txt>();
+  const stackAddressLabels = createRefArray<Txt>();
+  const stackCellLabels = createRefArray<Txt>(); // Labels come "old RBP", "a", "b", "result"
 
-  // Nuovo frame rosso per le celle aggiunte
-  const newFrameTop = createRef<Line>();
-  const newFrameSide = createRef<Line>();
-  const newFrameBottom = createRef<Line>();
+  // Indicatori RSP e RBP
+  const rspArrow = createRef<Line>();
+  const rspLabel = createRef<Txt>();
+  const rbpArrow = createRef<Line>();
+  const rbpLabel = createRef<Txt>();
 
-  // Assembly call box
-  const asmBox = createRef<Rect>();
-  const asmTitle = createRef<Txt>();
-  const asmLine1 = createRef<Txt>();
-  const asmLine2 = createRef<Txt>();
-  const asmLine3 = createRef<Txt>();
-  const asmLine3Highlight = createRef<Rect>();
-  const asmLine4 = createRef<Txt>();
-  const callArrow = createRef<Line>();
+  // Code box
+  const codeBox = createRef<Rect>();
+  const codeBoxTitle = createRef<Txt>();
 
-  // Label per contenuto celle stack
-  const cellLabelMainBase = createRef<Txt>();
-  const cellLabelRetAddr = createRef<Txt>();
-  const mainBaseArrow = createRef<Line>();
-  const mainBaseLabel = createRef<Txt>();
+  // C code lines
+  const cCodeLine1 = createRef<Txt>();
+  const cCodeLine2 = createRef<Txt>();
+  const cCodeLine3 = createRef<Txt>();
+  const cCodeLine4 = createRef<Txt>();
+  const cCodeLine5 = createRef<Txt>();
 
-  // Titoli Stack Pointer e Base Pointer
+  // Assembly lines
+  const asmLines = createRefArray<Txt>();
+  const asmHighlight = createRef<Rect>();
+
+  // Registers
+  const regBoxes = createRefArray<Rect>();
+  const regLabels = createRefArray<Txt>();
+  const regValues = createRefArray<Txt>();
+
+  // ============ ELEMENTI STACK ============
+
   view.add(
     <Txt
-      ref={stackPointerLabel}
-      text="Stack Pointer: 0xFFF8"
-      fontSize={36}
-      fill={"#ffffff"}
-      fontFamily={"monospace"}
-      fontWeight={700}
-      x={-200}
-      y={-380}
+      ref={stackTitle}
+      text="Stack Memory"
+      fontSize={32}
+      fill={"#dcdcaa"}
+      fontWeight={600}
+      x={stackX}
+      y={stackStartY - 60}
       opacity={0}
     />,
   );
 
-  view.add(
-    <Txt
-      ref={basePointerLabel}
-      text="Base Pointer: 0xFFFF"
-      fontSize={36}
-      fill={"#ffffff"}
-      fontFamily={"monospace"}
-      fontWeight={700}
-      x={-200}
-      y={-340}
-      opacity={0}
-    />,
-  );
+  // Crea celle stack e indirizzi
+  stackAddresses.forEach((item, i) => {
+    const y = stackStartY + i * (stackCellHeight + 5);
 
-  // Crea gli indirizzi di memoria
-  addresses.forEach((addr, index) => {
-    const y = startY + index * (cellHeight + 5);
+    // Indirizzo memoria
     view.add(
       <Txt
-        ref={addressLabels}
-        text={addr}
-        fontSize={28}
+        ref={stackAddressLabels}
+        text={item.addr}
+        fontSize={18}
         fill={"#808080"}
         fontFamily={"monospace"}
         x={addressX}
@@ -110,87 +106,63 @@ export default makeScene2D(function* (view) {
         opacity={0}
       />,
     );
-  });
 
-  // Celle stack iniziali (0xFFF8 a 0xFFFF - indici 6-13)
-  for (let i = 6; i < 14; i++) {
-    const y = startY + i * (cellHeight + 5);
+    // Cella stack
     view.add(
       <Rect
         ref={stackCells}
-        width={cellWidth}
-        height={cellHeight}
-        fill={"#00bfff"}
-        stroke={"#000000"}
+        width={stackCellWidth}
+        height={stackCellHeight}
+        fill={"#2d2d30"}
+        stroke={"#569cd6"}
         lineWidth={2}
-        x={startX}
+        radius={4}
+        x={stackX}
         y={y}
         opacity={0}
       />,
     );
-  }
 
-  // Nuove celle stack (0xFFF4 a 0xFFF7 - indici 2-5)
-  for (let i = 2; i < 6; i++) {
-    const y = startY + i * (cellHeight + 5);
+    // Valore dentro la cella
     view.add(
-      <Rect
-        ref={newStackCells}
-        width={cellWidth}
-        height={cellHeight}
-        fill={"#00bfff"}
-        stroke={"#000000"}
-        lineWidth={2}
-        x={startX + 400} // Inizia fuori schermo a destra
+      <Txt
+        ref={stackCellValues}
+        text=""
+        fontSize={16}
+        fill={"#ffffff"}
+        fontFamily={"monospace"}
+        fontWeight={600}
+        x={stackX}
         y={y}
         opacity={0}
       />,
     );
-  }
 
-  // Label contenuto celle - posizioni
-  const cellYMainBase = startY + 13 * (cellHeight + -32.5); // 0xFFFF - main's base
-  const cellYRetAddr = startY + 12 * (cellHeight + -28); // 0xFFFE - return address
+    // Label descrittiva (a destra della cella)
+    view.add(
+      <Txt
+        ref={stackCellLabels}
+        text=""
+        fontSize={14}
+        fill={"#6a9955"}
+        fontFamily={"monospace"}
+        x={stackX + stackCellWidth / 2 + 50}
+        y={y}
+        opacity={0}
+      />,
+    );
+  });
 
-  // Label "0xFFFF" dentro la cella 0xFFFF (main's base pointer value)
-  view.add(
-    <Txt
-      ref={cellLabelMainBase}
-      text="0xFFFF"
-      fontSize={16}
-      fill={"#000000"}
-      fontFamily={"monospace"}
-      fontWeight={700}
-      x={startX - cellWidth / 2 + 40}
-      y={cellYMainBase - cellHeight / 2 + 12}
-      opacity={0}
-    />,
-  );
-
-  // Label "0x0013" dentro la cella 0xFFFE (return address)
-  view.add(
-    <Txt
-      ref={cellLabelRetAddr}
-      text="0x0013"
-      fontSize={16}
-      fill={"#000000"}
-      fontFamily={"monospace"}
-      fontWeight={700}
-      x={startX - cellWidth / 2 + 40}
-      y={cellYRetAddr - cellHeight / 2 + 12}
-      opacity={0}
-    />,
-  );
-
-  // Freccia e label "main's base" che punta alla cella 0xFFFF
+  // Indicatore RSP
+  const rspY = stackStartY; // Inizialmente punta a 0xFFF8
   view.add(
     <Line
-      ref={mainBaseArrow}
+      ref={rspArrow}
       points={[
-        [startX + cellWidth / 2 + 120, cellYMainBase],
-        [startX + cellWidth / 2 + 10, cellYMainBase],
+        [stackX + stackCellWidth / 2 + 100, rspY],
+        [stackX + stackCellWidth / 2 + 10, rspY],
       ]}
-      stroke={"#ffd700"}
+      stroke={"#4ec9b0"}
       lineWidth={3}
       endArrow
       arrowSize={12}
@@ -200,342 +172,488 @@ export default makeScene2D(function* (view) {
 
   view.add(
     <Txt
-      ref={mainBaseLabel}
-      text="main's base"
-      fontSize={22}
-      fill={"#ffd700"}
-      fontFamily={"monospace"}
+      ref={rspLabel}
+      text="RSP"
+      fontSize={18}
+      fill={"#4ec9b0"}
       fontWeight={700}
-      x={startX + cellWidth / 2 + 200}
-      y={cellYMainBase}
+      fontFamily={"monospace"}
+      x={stackX + stackCellWidth / 2 + 130}
+      y={rspY}
       opacity={0}
     />,
   );
 
-  // Frame indicator (bracket giallo) - posizionato a destra delle celle iniziali
-  const frameStartY = startY + 6 * (cellHeight + 5) - cellHeight / 2;
-  const frameEndY = startY + 13 * (cellHeight + 5) + cellHeight / 2;
-  const frameX = startX + cellWidth / 2 + 30;
-
-  // Linea superiore del bracket
+  // Indicatore RBP
   view.add(
     <Line
-      ref={frameTop}
+      ref={rbpArrow}
       points={[
-        [frameX, frameStartY],
-        [frameX + 30, frameStartY],
+        [stackX + stackCellWidth / 2 + 100, rspY],
+        [stackX + stackCellWidth / 2 + 10, rspY],
       ]}
-      stroke={"#ffd700"}
-      lineWidth={6}
+      stroke={"#ce9178"}
+      lineWidth={3}
+      endArrow
+      arrowSize={12}
       opacity={0}
     />,
   );
 
-  // Linea verticale del bracket
-  view.add(
-    <Line
-      ref={frameSide}
-      points={[
-        [frameX + 30, frameStartY],
-        [frameX + 30, frameEndY],
-      ]}
-      stroke={"#ffd700"}
-      lineWidth={6}
-      opacity={0}
-    />,
-  );
-
-  // Linea inferiore del bracket
-  view.add(
-    <Line
-      ref={frameBottom}
-      points={[
-        [frameX + 30, frameEndY],
-        [frameX, frameEndY],
-      ]}
-      stroke={"#ffd700"}
-      lineWidth={6}
-      opacity={0}
-    />,
-  );
-
-  // Label preview per il nuovo frame
   view.add(
     <Txt
-      ref={previewLabel}
-      text="(Preview of ADD's frame)"
-      fontSize={20}
-      fill={"#808080"}
+      ref={rbpLabel}
+      text="RBP"
+      fontSize={18}
+      fill={"#ce9178"}
+      fontWeight={700}
       fontFamily={"monospace"}
-      x={startX + 280}
-      y={frameEndY + 50}
+      x={stackX + stackCellWidth / 2 + 130}
+      y={rspY}
       opacity={0}
     />,
   );
 
-  // Nuovo frame rosso (bracket) per le celle 0xFFF4-0xFFF7
-  const newFrameStartYPos = startY + 2 * (cellHeight + 5) - cellHeight / 2;
-  const newFrameEndYPos = startY + 5 * (cellHeight + 5) + cellHeight / 2;
-
-  // Linea superiore del bracket rosso
-  view.add(
-    <Line
-      ref={newFrameTop}
-      points={[
-        [frameX + 400, newFrameStartYPos],
-        [frameX + 30 + 400, newFrameStartYPos],
-      ]}
-      stroke={"#ff4444"}
-      lineWidth={6}
-      opacity={0}
-    />,
-  );
-
-  // Linea verticale del bracket rosso
-  view.add(
-    <Line
-      ref={newFrameSide}
-      points={[
-        [frameX + 30 + 400, newFrameStartYPos],
-        [frameX + 30 + 400, newFrameEndYPos],
-      ]}
-      stroke={"#ff4444"}
-      lineWidth={6}
-      opacity={0}
-    />,
-  );
-
-  // Linea inferiore del bracket rosso
-  view.add(
-    <Line
-      ref={newFrameBottom}
-      points={[
-        [frameX + 30 + 400, newFrameEndYPos],
-        [frameX + 400, newFrameEndYPos],
-      ]}
-      stroke={"#ff4444"}
-      lineWidth={6}
-      opacity={0}
-    />,
-  );
-
-  // Assembly code box (a sinistra)
-  const asmBoxX = -450;
-  const asmBoxY = -50;
-  const lineSpacing = 32;
+  // ============ CODE BOX ============
 
   view.add(
     <Rect
-      ref={asmBox}
-      width={340}
-      height={200}
+      ref={codeBox}
+      width={codeBoxWidth}
+      height={codeBoxHeight}
       fill={"#1e1e1e"}
       stroke={"#3e3e42"}
       lineWidth={3}
       radius={10}
-      x={asmBoxX}
-      y={asmBoxY}
+      x={codeBoxX}
+      y={codeBoxY}
       opacity={0}
     />,
   );
 
   view.add(
     <Txt
-      ref={asmTitle}
-      text="Assembly"
-      fontSize={22}
-      fill={"#808080"}
+      ref={codeBoxTitle}
+      text="C Code"
+      fontSize={24}
+      fill={"#569cd6"}
+      fontWeight={600}
+      x={codeBoxX}
+      y={codeBoxY - codeBoxHeight / 2 - 25}
+      opacity={0}
+    />,
+  );
+
+  // C Code lines
+  const cCodeX = codeBoxX - codeBoxWidth / 2 + 30;
+  const cCodeStartY = codeBoxY - 120;
+  const cLineSpacing = 32;
+
+  view.add(
+    <Txt
+      ref={cCodeLine1}
+      text="int sum(int a, int b)"
+      fontSize={20}
+      fill={"#dcdcaa"}
       fontFamily={"monospace"}
-      x={asmBoxX}
-      y={asmBoxY - 75}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY}
       opacity={0}
     />,
   );
 
-  // Linea 1: mov edi, 3
   view.add(
     <Txt
-      ref={asmLine1}
-      text="0x0004  mov edi, 3"
-      fontSize={22}
+      ref={cCodeLine2}
+      text="{"
+      fontSize={20}
+      fill={"#ffffff"}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing}
+      opacity={0}
+    />,
+  );
+
+  view.add(
+    <Txt
+      ref={cCodeLine3}
+      text="    int result = a + b;"
+      fontSize={20}
       fill={"#9cdcfe"}
       fontFamily={"monospace"}
-      x={asmBoxX}
-      y={asmBoxY - 45}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 2}
       opacity={0}
     />,
   );
 
-  // Linea 2: mov esi, 4
   view.add(
     <Txt
-      ref={asmLine2}
-      text="0x0009  mov esi, 4"
-      fontSize={22}
-      fill={"#9cdcfe"}
+      ref={cCodeLine4}
+      text="    return result;"
+      fontSize={20}
+      fill={"#c586c0"}
       fontFamily={"monospace"}
-      x={asmBoxX}
-      y={asmBoxY - 45 + lineSpacing}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 3}
       opacity={0}
     />,
   );
 
-  // Highlight per call add
+  view.add(
+    <Txt
+      ref={cCodeLine5}
+      text="}"
+      fontSize={20}
+      fill={"#ffffff"}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 4}
+      opacity={0}
+    />,
+  );
+
+  // Assembly highlight (rettangolo per evidenziare linea corrente)
   view.add(
     <Rect
-      ref={asmLine3Highlight}
-      width={320}
-      height={30}
+      ref={asmHighlight}
+      width={codeBoxWidth - 20}
+      height={24}
       fill={"#264f78"}
-      radius={5}
-      x={asmBoxX}
-      y={asmBoxY - 45 + lineSpacing * 2}
+      radius={4}
+      x={codeBoxX}
+      y={cCodeStartY}
       opacity={0}
     />,
   );
 
-  // Linea 3: call add (evidenziata)
-  view.add(
-    <Txt
-      ref={asmLine3}
-      text="0x000E  call add"
-      fontSize={22}
-      fill={"#4ec9b0"}
-      fontFamily={"monospace"}
-      fontWeight={700}
-      x={asmBoxX}
-      y={asmBoxY - 45 + lineSpacing * 2}
-      opacity={0}
-    />,
-  );
+  // Assembly lines
+  const asmCode = [
+    "sum:",
+    "    push rbp",
+    "    mov rbp, rsp",
+    "    mov QWORD PTR [rbp-24], rdi",
+    "    mov QWORD PTR [rbp-32], rsi",
+    "    mov rdx, QWORD PTR [rbp-24]",
+    "    mov rax, QWORD PTR [rbp-32]",
+    "    add rax, rdx",
+    "    mov QWORD PTR [rbp-8], rax",
+    "    mov rax, QWORD PTR [rbp-8]",
+    "    pop rbp",
+    "    ret",
+  ];
 
-  // Linea 4: mov [0x1234], eax
-  view.add(
-    <Txt
-      ref={asmLine4}
-      text="0x0013  mov [0x1234], eax"
-      fontSize={22}
-      fill={"#9cdcfe"}
-      fontFamily={"monospace"}
-      x={asmBoxX}
-      y={asmBoxY - 45 + lineSpacing * 3}
-      opacity={0}
-    />,
-  );
+  const asmStartY = cCodeStartY - 20;
+  const asmLineSpacing = 26;
 
-  // Freccia dal box assembly verso lo stack
-  view.add(
-    <Line
-      ref={callArrow}
-      points={[
-        [asmBoxX + 180, asmBoxY - 45 + lineSpacing * 2],
-        [
-          startX - cellWidth / 2 - 20,
-          (newFrameStartYPos + newFrameEndYPos) / 2,
-        ],
-      ]}
-      stroke={"#4ec9b0"}
-      lineWidth={4}
-      endArrow
-      arrowSize={16}
-      opacity={0}
-      lineDash={[10, 5]}
-    />,
-  );
+  asmCode.forEach((line, i) => {
+    const isLabel = line.endsWith(":");
+    view.add(
+      <Txt
+        ref={asmLines}
+        text={line}
+        fontSize={16}
+        fill={isLabel ? "#dcdcaa" : "#9cdcfe"}
+        fontFamily={"monospace"}
+        fontWeight={isLabel ? 700 : 400}
+        offset={[-1, 0]}
+        x={cCodeX}
+        y={asmStartY + i * asmLineSpacing}
+        opacity={0}
+      />,
+    );
+  });
 
-  // === SLIDE 1: Stack iniziale ===
+  // ============ REGISTERS ============
 
-  // Mostra i titoli
+  const registers = ["RSP", "RBP", "RDI", "RSI", "RAX"];
+  const regInitialValues = ["0xFFF8", "0xFFFF", "5", "3", "?"];
+  const regColors = ["#4ec9b0", "#ce9178", "#dcdcaa", "#dcdcaa", "#c586c0"];
+
+  registers.forEach((reg, i) => {
+    const x = regStartX + i * regSpacing;
+
+    // Box registro
+    view.add(
+      <Rect
+        ref={regBoxes}
+        width={regBoxWidth}
+        height={regBoxHeight}
+        fill={"#2d2d30"}
+        stroke={regColors[i]}
+        lineWidth={3}
+        radius={8}
+        x={x}
+        y={regY}
+        opacity={0}
+      />,
+    );
+
+    // Nome registro
+    view.add(
+      <Txt
+        ref={regLabels}
+        text={reg}
+        fontSize={18}
+        fill={regColors[i]}
+        fontWeight={700}
+        fontFamily={"monospace"}
+        x={x}
+        y={regY - 18}
+        opacity={0}
+      />,
+    );
+
+    // Valore registro
+    view.add(
+      <Txt
+        ref={regValues}
+        text={regInitialValues[i]}
+        fontSize={20}
+        fill={"#ffffff"}
+        fontWeight={600}
+        fontFamily={"monospace"}
+        x={x}
+        y={regY + 12}
+        opacity={0}
+      />,
+    );
+  });
+
+  // ============ ANIMAZIONI ============
+
+  // === FASE 1: Setup iniziale ===
+
+  yield* beginSlide("Stack: Intro");
+
+  // Mostra titolo stack
+  yield* stackTitle().opacity(1, 0.5);
+
+  // Mostra indirizzi e celle (solo le prime 2 inizialmente visibili)
   yield* all(
-    stackPointerLabel().opacity(1, 0.8),
-    basePointerLabel().opacity(1, 0.8),
+    stackAddressLabels[0].opacity(1, 0.3),
+    stackAddressLabels[1].opacity(1, 0.3),
+    stackCells[0].opacity(1, 0.3),
+    stackCells[1].opacity(1, 0.3),
   );
 
-  // Mostra tutti gli indirizzi di memoria
+  // Mostra registri
   yield* all(
-    ...addressLabels.map((label, i) => label.opacity(1, 0.3 + i * 0.05)),
+    ...regBoxes.map((box, i) => box.opacity(1, 0.3 + i * 0.1)),
+    ...regLabels.map((label, i) => label.opacity(1, 0.3 + i * 0.1)),
+    ...regValues.map((value, i) => value.opacity(1, 0.3 + i * 0.1)),
   );
 
-  // Mostra le celle dello stack iniziale una alla volta (dall'alto verso il basso)
-  for (let i = 0; i < stackCells.length; i++) {
-    yield* stackCells[i].opacity(1, 0.15);
+  // Mostra indicatore RSP (punta a 0xFFF8)
+  yield* all(rspArrow().opacity(1, 0.4), rspLabel().opacity(1, 0.4));
+
+  yield* beginSlide("Stack: Initial State");
+
+  // === FASE 2: Mostra C Code ===
+
+  yield* all(codeBox().opacity(1, 0.5), codeBoxTitle().opacity(1, 0.5));
+
+  yield* cCodeLine1().opacity(1, 0.3);
+  yield* cCodeLine2().opacity(1, 0.2);
+  yield* cCodeLine3().opacity(1, 0.3);
+  yield* cCodeLine4().opacity(1, 0.3);
+  yield* cCodeLine5().opacity(1, 0.2);
+
+  yield* beginSlide("Stack: C Code");
+
+  // === FASE 3: Transizione a Assembly ===
+
+  // Fade out C code
+  yield* all(
+    cCodeLine1().opacity(0, 0.4),
+    cCodeLine2().opacity(0, 0.4),
+    cCodeLine3().opacity(0, 0.4),
+    cCodeLine4().opacity(0, 0.4),
+    cCodeLine5().opacity(0, 0.4),
+    codeBoxTitle().text("x86-64 Assembly", 0.4),
+  );
+
+  // Mostra assembly code
+  for (let i = 0; i < asmLines.length; i++) {
+    yield* asmLines[i].opacity(1, 0.15);
   }
 
-  // Mostra il frame indicator
+  yield* beginSlide("Stack: Assembly Code");
+
+  // === FASE 4: Esecuzione Assembly ===
+
+  // Helper per muovere highlight
+  const highlightLine = function* (lineIndex: number) {
+    const y = asmStartY + lineIndex * asmLineSpacing;
+    yield* all(asmHighlight().opacity(1, 0.2), asmHighlight().y(y, 0.3));
+  };
+
+  // Helper per aggiornare valore registro
+  const updateRegValue = function* (regIndex: number, newValue: string) {
+    yield* regValues[regIndex].text(newValue, 0.3);
+  };
+
+  // Helper per mostrare cella stack
+  const showStackCell = function* (
+    cellIndex: number,
+    value: string,
+    label: string,
+  ) {
+    yield* all(
+      stackAddressLabels[cellIndex].opacity(1, 0.3),
+      stackCells[cellIndex].opacity(1, 0.3),
+    );
+    yield* all(
+      stackCellValues[cellIndex].text(value, 0.3),
+      stackCellValues[cellIndex].opacity(1, 0.3),
+      stackCellLabels[cellIndex].text(label, 0.3),
+      stackCellLabels[cellIndex].opacity(1, 0.3),
+    );
+  };
+
+  // Helper per muovere RSP
+  const moveRSP = function* (cellIndex: number) {
+    const y = stackStartY + cellIndex * (stackCellHeight + 5);
+    yield* all(
+      rspArrow().points(
+        [
+          [stackX + stackCellWidth / 2 + 100, y],
+          [stackX + stackCellWidth / 2 + 10, y],
+        ],
+        0.4,
+      ),
+      rspLabel().y(y, 0.4),
+    );
+  };
+
+  // Helper per muovere/mostrare RBP
+  const moveRBP = function* (cellIndex: number) {
+    const y = stackStartY + cellIndex * (stackCellHeight + 5);
+    yield* all(
+      rbpArrow().opacity(1, 0.3),
+      rbpLabel().opacity(1, 0.3),
+      rbpArrow().points(
+        [
+          [stackX + stackCellWidth / 2 + 160, y],
+          [stackX + stackCellWidth / 2 + 10, y],
+        ],
+        0.4,
+      ),
+      rbpLabel().y(y, 0.4),
+      rbpLabel().x(stackX + stackCellWidth / 2 + 190, 0.4),
+    );
+  };
+
+  // --- Istruzione 1: push rbp ---
+  yield* highlightLine(1); // "push rbp"
+
+  // RSP si sposta a 0xFFF0, salva old RBP value
+  yield* updateRegValue(0, "0xFFF0"); // RSP = 0xFFF0
+  yield* moveRSP(1); // RSP punta a cella 1 (0xFFF0)
+  yield* showStackCell(1, "0xFFFF", "old RBP");
+
+  yield* beginSlide("Stack: push rbp");
+
+  // --- Istruzione 2: mov rbp, rsp ---
+  yield* highlightLine(2); // "mov rbp, rsp"
+
+  yield* updateRegValue(1, "0xFFF0"); // RBP = RSP = 0xFFF0
+  yield* moveRBP(1); // RBP punta alla stessa cella di RSP
+
+  yield* beginSlide("Stack: mov rbp, rsp");
+
+  // --- Istruzione 3: mov QWORD PTR [rbp-24], rdi ---
+  yield* highlightLine(3);
+
+  // Mostra cella a rbp-24 (0xFFD8)
+  yield* showStackCell(4, "5", "a (rdi)");
+
+  yield* beginSlide("Stack: store a");
+
+  // --- Istruzione 4: mov QWORD PTR [rbp-32], rsi ---
+  yield* highlightLine(4);
+
+  // Mostra cella a rbp-32 (0xFFD0)
+  yield* showStackCell(5, "3", "b (rsi)");
+
+  yield* beginSlide("Stack: store b");
+
+  // --- Istruzione 5: mov rdx, QWORD PTR [rbp-24] ---
+  yield* highlightLine(5);
+
+  // rdx = 5 (carica a da memoria) - mostra visivamente
+  yield* stackCells[4].stroke("#dcdcaa", 0.3);
+  yield* stackCells[4].stroke("#569cd6", 0.3);
+
+  yield* beginSlide("Stack: load a → rdx");
+
+  // --- Istruzione 6: mov rax, QWORD PTR [rbp-32] ---
+  yield* highlightLine(6);
+
+  yield* updateRegValue(4, "3"); // RAX = 3
+  yield* stackCells[5].stroke("#c586c0", 0.3);
+  yield* stackCells[5].stroke("#569cd6", 0.3);
+
+  yield* beginSlide("Stack: load b → rax");
+
+  // --- Istruzione 7: add rax, rdx ---
+  yield* highlightLine(7);
+
+  yield* updateRegValue(4, "8"); // RAX = 3 + 5 = 8
+
+  yield* beginSlide("Stack: add rax, rdx");
+
+  // --- Istruzione 8: mov QWORD PTR [rbp-8], rax ---
+  yield* highlightLine(8);
+
+  // Mostra cella result a rbp-8 (0xFFE8)
+  yield* showStackCell(2, "8", "result");
+
+  yield* beginSlide("Stack: store result");
+
+  // --- Istruzione 9: mov rax, QWORD PTR [rbp-8] ---
+  yield* highlightLine(9);
+
+  yield* stackCells[2].stroke("#c586c0", 0.3);
+  yield* stackCells[2].stroke("#569cd6", 0.3);
+
+  yield* beginSlide("Stack: load result → rax");
+
+  // --- Istruzione 10: pop rbp ---
+  yield* highlightLine(10);
+
+  yield* updateRegValue(1, "0xFFFF"); // RBP ripristinato
+  yield* updateRegValue(0, "0xFFF8"); // RSP torna a 0xFFF8
+
   yield* all(
-    frameTop().opacity(1, 0.5),
-    frameSide().opacity(1, 0.5),
-    frameBottom().opacity(1, 0.5),
+    moveRSP(0),
+    rbpArrow().opacity(0, 0.3),
+    rbpLabel().opacity(0, 0.3),
   );
 
-  yield* beginSlide("Stack Iniziale");
+  // Cella old RBP diventa grigia (deallocata)
+  yield* stackCells[1].fill("#1a1a1a", 0.3);
+  yield* stackCellValues[1].fill("#808080", 0.3);
 
-  // === SLIDE 2: Aggiunta nuove celle con animazione ===
+  yield* beginSlide("Stack: pop rbp");
 
-  // Mostra il box assembly e titolo
-  yield* all(asmBox().opacity(1, 0.5), asmTitle().opacity(1, 0.5));
+  // --- Istruzione 11: ret ---
+  yield* highlightLine(11);
 
-  // Mostra le linee di codice assembly una alla volta
-  yield* asmLine1().opacity(1, 0.3);
-  yield* asmLine2().opacity(1, 0.3);
+  // Animazione finale - highlight verde per successo
+  yield* asmHighlight().fill("#2d4a2d", 0.3);
 
-  // Mostra highlight e linea call add
-  yield* all(asmLine3Highlight().opacity(1, 0.3), asmLine3().opacity(1, 0.3));
+  yield* beginSlide("Stack: ret (return 8)");
 
-  yield* asmLine4().opacity(1, 0.3);
+  // Fine - mostra risultato finale
+  yield* asmHighlight().opacity(0, 0.3);
+  yield* regBoxes[4].stroke("#4ec9b0", 0.5); // Evidenzia RAX con il risultato
 
-  // Mostra la freccia che punta verso lo stack
-  yield* callArrow().opacity(1, 0.5);
-
-  // Aggiorna Stack Pointer
-  yield* stackPointerLabel().text("Stack Pointer: 0xFFF4", 0.5);
-
-  // Mostra le nuove celle e il bracket rosso
-  yield* all(
-    ...newStackCells.map((cell) => cell.opacity(1, 0.3)),
-    newFrameTop().opacity(1, 0.3),
-    newFrameSide().opacity(1, 0.3),
-    newFrameBottom().opacity(1, 0.3),
-  );
-
-  // Animazione slide laterale - celle e bracket rosso insieme
-  yield* all(
-    ...newStackCells.map((cell) => cell.x(startX, 0.8)),
-    newFrameTop().points(
-      [
-        [frameX, newFrameStartYPos],
-        [frameX + 30, newFrameStartYPos],
-      ],
-      0.8,
-    ),
-    newFrameSide().points(
-      [
-        [frameX + 30, newFrameStartYPos],
-        [frameX + 30, newFrameEndYPos],
-      ],
-      0.8,
-    ),
-    newFrameBottom().points(
-      [
-        [frameX + 30, newFrameEndYPos],
-        [frameX, newFrameEndYPos],
-      ],
-      0.8,
-    ),
-  );
-
-  yield* beginSlide("Stack Espanso");
-
-  // === SLIDE 3: Mostra contenuto celle - main's base pointer ===
-
-  // Mostra il valore dentro la cella 0xFFFF (main's base)
-  yield* cellLabelMainBase().opacity(1, 0.5);
-
-  // Mostra il return address nella cella 0xFFFE
-  yield* cellLabelRetAddr().opacity(1, 0.5);
-
-  // Mostra la freccia e label "main's base"
-  yield* all(mainBaseLabel().opacity(1, 0.5), mainBaseArrow().opacity(1, 0.5));
-
-  yield* beginSlide("Main Base Pointer");
+  yield* beginSlide("Stack: Complete");
 });

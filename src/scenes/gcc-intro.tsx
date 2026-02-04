@@ -11,7 +11,7 @@ export default makeScene2D(function* (view) {
   // Slide 1: Titolo - Compiler Toolchain
   const titleSlide = SlideTitle({
     title: "Compiler Toolchain",
-    subtitle: "Da codice sorgente a eseguibile",
+    subtitle: "From source code to executable",
     titleColor: "#ce9178",
     subtitleColor: "#9cdcfe",
     titleFontSize: 70,
@@ -44,7 +44,7 @@ export default makeScene2D(function* (view) {
   view.add(
     <Txt
       ref={phasesTitle}
-      text="Le 4 Fasi del Compilatore"
+      text="The 4 Compiler Phases"
       fontSize={60}
       fill={"#dcdcaa"}
       y={-330}
@@ -302,7 +302,7 @@ export default makeScene2D(function* (view) {
   view.add(
     <Txt
       ref={defLenLine4}
-      text="// Dopo: array[200], i < 200"
+      text="// After: array[200], i < 200"
       fontSize={24}
       fill={"#6a9955"}
       fontFamily={"monospace"}
@@ -398,8 +398,8 @@ export default makeScene2D(function* (view) {
     />,
   );
 
-  // Box va da -450 a +450, quindi -350 dà un margine di ~100px dal bordo sinistro
-  const includeCodeX = -350;
+  // Box va da -450 a +450, centrato nella box
+  const includeCodeX = -200;
 
   view.add(
     <Txt
@@ -408,7 +408,7 @@ export default makeScene2D(function* (view) {
       fontSize={28}
       fill={"#c586c0"}
       fontFamily={"monospace"}
-      textAlign={"left"}
+      offset={[-1, 0]}
       x={includeCodeX}
       y={-100}
       opacity={0}
@@ -422,7 +422,7 @@ export default makeScene2D(function* (view) {
       fontSize={28}
       fill={"#dcdcaa"}
       fontFamily={"monospace"}
-      textAlign={"left"}
+      offset={[-1, 0]}
       x={includeCodeX}
       y={-30}
       opacity={0}
@@ -432,11 +432,11 @@ export default makeScene2D(function* (view) {
   view.add(
     <Txt
       ref={includeArrow}
-      text="↓ Copia contenuto di stdio.h"
+      text="↓ Copy content from stdio.h"
       fontSize={24}
       fill={"#6a9955"}
       fontFamily={"monospace"}
-      textAlign={"left"}
+      offset={[-1, 0]}
       x={includeCodeX}
       y={50}
       opacity={0}
@@ -450,7 +450,7 @@ export default makeScene2D(function* (view) {
       fontSize={26}
       fill={"#4ec9b0"}
       fontFamily={"monospace"}
-      textAlign={"left"}
+      offset={[-1, 0]}
       x={includeCodeX}
       y={120}
       opacity={0}
@@ -468,6 +468,7 @@ export default makeScene2D(function* (view) {
   const cCodeLine4 = createRef<Txt>();
   const compArrow = createRef<Line>();
   const compGear = createRef<Txt>();
+  const processingText = createRef<Txt>();
   const asmCodeBox = createRef<Rect>();
   const asmCodeTitle = createRef<Txt>();
   const asmLine1 = createRef<Txt>();
@@ -528,7 +529,7 @@ export default makeScene2D(function* (view) {
       fill={"#569cd6"}
       fontWeight={600}
       x={-350}
-      y={-80}
+      y={-110}
       opacity={0}
     />,
   );
@@ -575,6 +576,20 @@ export default makeScene2D(function* (view) {
     />,
   );
 
+  view.add(
+    <Txt
+      ref={cCodeLine4}
+      text="}"
+      fontSize={18}
+      fill={"#ffffff"}
+      fontFamily={"monospace"}
+      textAlign={"left"}
+      x={-420}
+      y={60}
+      opacity={0}
+    />,
+  );
+
   // Freccia trasformazione
   view.add(
     <Line
@@ -587,6 +602,32 @@ export default makeScene2D(function* (view) {
       lineWidth={4}
       endArrow
       arrowSize={16}
+      opacity={0}
+    />,
+  );
+
+  // Ingranaggio sopra la freccia
+  view.add(
+    <Txt
+      ref={compGear}
+      text="⚙️"
+      fontSize={40}
+      x={-25}
+      y={30}
+      opacity={0}
+    />,
+  );
+
+  // Processing text (appare durante l'animazione dell'ingranaggio)
+  view.add(
+    <Txt
+      ref={processingText}
+      text="Processing..."
+      fontSize={24}
+      fill={"#dcdcaa"}
+      fontWeight={600}
+      x={-25}
+      y={-10}
       opacity={0}
     />,
   );
@@ -615,10 +656,14 @@ export default makeScene2D(function* (view) {
       fill={"#c586c0"}
       fontWeight={600}
       x={300}
-      y={-80}
+      y={-110}
       opacity={0}
     />,
   );
+
+  // Assembly: offset={[-1, 0]} ancora il testo al bordo sinistro
+  const asmLeftX = 120; // bordo sinistro per la label
+  const asmIndentX = 150; // bordo sinistro + indentazione per le istruzioni
 
   view.add(
     <Txt
@@ -627,8 +672,8 @@ export default makeScene2D(function* (view) {
       fontSize={16}
       fill={"#dcdcaa"}
       fontFamily={"monospace"}
-      textAlign={"left"}
-      x={200}
+      offset={[-1, 0]}
+      x={asmLeftX}
       y={-40}
       opacity={0}
     />,
@@ -637,12 +682,12 @@ export default makeScene2D(function* (view) {
   view.add(
     <Txt
       ref={asmLine2}
-      text="    push rbp"
+      text="push rbp"
       fontSize={16}
       fill={"#9cdcfe"}
       fontFamily={"monospace"}
-      textAlign={"left"}
-      x={220}
+      offset={[-1, 0]}
+      x={asmIndentX}
       y={-15}
       opacity={0}
     />,
@@ -651,12 +696,12 @@ export default makeScene2D(function* (view) {
   view.add(
     <Txt
       ref={asmLine3}
-      text="    mov rbp, rsp"
+      text="mov rbp, rsp"
       fontSize={16}
       fill={"#9cdcfe"}
       fontFamily={"monospace"}
-      textAlign={"left"}
-      x={235}
+      offset={[-1, 0]}
+      x={asmIndentX}
       y={10}
       opacity={0}
     />,
@@ -665,12 +710,12 @@ export default makeScene2D(function* (view) {
   view.add(
     <Txt
       ref={asmLine4}
-      text="    add edi, esi"
+      text="add edi, esi"
       fontSize={16}
       fill={"#ce9178"}
       fontFamily={"monospace"}
-      textAlign={"left"}
-      x={235}
+      offset={[-1, 0]}
+      x={asmIndentX}
       y={35}
       opacity={0}
     />,
@@ -679,12 +724,12 @@ export default makeScene2D(function* (view) {
   view.add(
     <Txt
       ref={asmLine5}
-      text="    mov eax, edi"
+      text="mov eax, edi"
       fontSize={16}
       fill={"#9cdcfe"}
       fontFamily={"monospace"}
-      textAlign={"left"}
-      x={235}
+      offset={[-1, 0]}
+      x={asmIndentX}
       y={60}
       opacity={0}
     />,
@@ -693,12 +738,12 @@ export default makeScene2D(function* (view) {
   view.add(
     <Txt
       ref={asmLine6}
-      text="    pop rbp"
+      text="pop rbp"
       fontSize={16}
       fill={"#9cdcfe"}
       fontFamily={"monospace"}
-      textAlign={"left"}
-      x={220}
+      offset={[-1, 0]}
+      x={asmIndentX}
       y={85}
       opacity={0}
     />,
@@ -791,12 +836,12 @@ export default makeScene2D(function* (view) {
     defLenHighlight3().opacity(1, 0.4),
   );
 
-  yield* beginSlide("Highlight altri LEN");
+  yield* beginSlide("Highlight other LEN");
 
   // Mostra risultato sostituzione
   yield* defLenLine4().opacity(1, 0.6);
 
-  yield* beginSlide("Sostituzione LEN → 200");
+  yield* beginSlide("Substitution LEN → 200");
 
   // Nascondi esempio #define con zoom-out
   yield* all(
@@ -825,7 +870,7 @@ export default makeScene2D(function* (view) {
   yield* includeArrow().opacity(1, 0.5);
   yield* includeResult().opacity(1, 0.6);
 
-  yield* beginSlide("#include espansione");
+  yield* beginSlide("#include expansion");
 
   // Nascondi #include con zoom-out e torna alla vista principale
   yield* all(
@@ -896,19 +941,28 @@ export default makeScene2D(function* (view) {
   yield* all(compZoomBox().opacity(1, 0.3), compZoomBox().scale(1, 0.8));
   yield* compZoomTitle().opacity(1, 0.5);
 
-  // Mostra codice C
+  // Mostra codice C completo
   yield* cCodeBox().opacity(1, 0.5);
   yield* cCodeTitle().opacity(1, 0.5);
   yield* cCodeLine1().opacity(1, 0.4);
   yield* cCodeLine2().opacity(1, 0.3);
   yield* cCodeLine3().opacity(1, 0.4);
+  yield* cCodeLine4().opacity(1, 0.3);
 
   yield* beginSlide("Compiler: C Code");
 
-  // Freccia trasformazione
-  yield* compArrow().opacity(1, 0.6);
+  // Solo ingranaggio (no freccia)
+  yield* compGear().opacity(1, 0.5);
+  yield* all(
+    compGear().rotation(360, 1),
+    processingText().opacity(1, 0.3),
+  );
 
-  // Mostra Assembly
+  yield* beginSlide("Compiler: Processing");
+
+  // Nascondi processing, mostra freccia e assembly
+  yield* processingText().opacity(0, 0.3);
+  yield* compArrow().opacity(1, 0.4);
   yield* asmCodeBox().opacity(1, 0.5);
   yield* asmCodeTitle().opacity(1, 0.5);
   yield* asmLine1().opacity(1, 0.3);
@@ -930,7 +984,10 @@ export default makeScene2D(function* (view) {
     cCodeLine1().opacity(0, 0.4),
     cCodeLine2().opacity(0, 0.4),
     cCodeLine3().opacity(0, 0.4),
+    cCodeLine4().opacity(0, 0.4),
     compArrow().opacity(0, 0.4),
+    compGear().opacity(0, 0.4),
+    processingText().opacity(0, 0.4),
     asmCodeBox().opacity(0, 0.4),
     asmCodeTitle().opacity(0, 0.4),
     asmLine1().opacity(0, 0.4),
