@@ -9,6 +9,7 @@ export interface PhaseBoxProps {
   y?: number;
   width?: number;
   height?: number;
+  descTextAlign?: CanvasTextAlign;
 }
 
 export function PhaseBox(props: PhaseBoxProps) {
@@ -20,6 +21,7 @@ export function PhaseBox(props: PhaseBoxProps) {
     y = 50,
     width = 180,
     height = 150,
+    descTextAlign = "center",
   } = props;
 
   const boxRef = createRef<Rect>();
@@ -59,7 +61,7 @@ export function PhaseBox(props: PhaseBoxProps) {
         text={description}
         fontSize={20}
         fill={"#9cdcfe"}
-        textAlign={"center"}
+        textAlign={descTextAlign}
         lineHeight={32}
         x={x}
         y={y + 10}
