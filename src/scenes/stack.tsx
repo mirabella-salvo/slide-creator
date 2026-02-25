@@ -26,8 +26,8 @@ export default makeScene2D(function* (view) {
   const regY = 330;
   const regBoxWidth = 110;
   const regBoxHeight = 70;
-  const regStartX = -400;
-  const regSpacing = 130;
+  const regStartX = -300;
+  const regSpacing = 120;
 
   // Indirizzi di memoria stack (dal più alto al più basso per visualizzazione)
   const stackAddresses = [
@@ -138,7 +138,7 @@ export default makeScene2D(function* (view) {
       />,
     );
 
-    // Label descrittiva (a destra della cella)
+    // Label descrittiva (a destra delle frecce RSP/RBP)
     view.add(
       <Txt
         ref={stackCellLabels}
@@ -146,7 +146,8 @@ export default makeScene2D(function* (view) {
         fontSize={14}
         fill={"#6a9955"}
         fontFamily={"monospace"}
-        x={stackX + stackCellWidth / 2 + 50}
+        offset={[-1, 0]}
+        x={stackX + stackCellWidth / 2 + 210}
         y={y}
         opacity={0}
       />,
@@ -252,23 +253,31 @@ export default makeScene2D(function* (view) {
   view.add(
     <Txt
       ref={cCodeLine1}
-      text="int sum(int a, int b)"
       fontSize={20}
-      fill={"#dcdcaa"}
       fontFamily={"monospace"}
       offset={[-1, 0]}
       x={cCodeX}
       y={cCodeStartY}
       opacity={0}
-    />,
+    >
+      <Txt fill={"#569cd6"}>{"int "}</Txt>
+      <Txt fill={"#dcdcaa"}>{"sum"}</Txt>
+      <Txt fill={"#d4d4d4"}>{"("}</Txt>
+      <Txt fill={"#569cd6"}>{"int "}</Txt>
+      <Txt fill={"#9cdcfe"}>{"a"}</Txt>
+      <Txt fill={"#d4d4d4"}>{", "}</Txt>
+      <Txt fill={"#569cd6"}>{"int "}</Txt>
+      <Txt fill={"#9cdcfe"}>{"b"}</Txt>
+      <Txt fill={"#d4d4d4"}>{")"}</Txt>
+    </Txt>,
   );
 
   view.add(
     <Txt
       ref={cCodeLine2}
-      text="{"
+      text={"{"}
       fontSize={20}
-      fill={"#ffffff"}
+      fill={"#d4d4d4"}
       fontFamily={"monospace"}
       offset={[-1, 0]}
       x={cCodeX}
@@ -280,37 +289,45 @@ export default makeScene2D(function* (view) {
   view.add(
     <Txt
       ref={cCodeLine3}
-      text="    int result = a + b;"
       fontSize={20}
-      fill={"#9cdcfe"}
       fontFamily={"monospace"}
       offset={[-1, 0]}
       x={cCodeX}
       y={cCodeStartY + cLineSpacing * 2}
       opacity={0}
-    />,
+    >
+      <Txt fill={"#569cd6"}>{"    int "}</Txt>
+      <Txt fill={"#9cdcfe"}>{"result"}</Txt>
+      <Txt fill={"#d4d4d4"}>{" = "}</Txt>
+      <Txt fill={"#9cdcfe"}>{"a"}</Txt>
+      <Txt fill={"#d4d4d4"}>{" + "}</Txt>
+      <Txt fill={"#9cdcfe"}>{"b"}</Txt>
+      <Txt fill={"#d4d4d4"}>{";"}</Txt>
+    </Txt>,
   );
 
   view.add(
     <Txt
       ref={cCodeLine4}
-      text="    return result;"
       fontSize={20}
-      fill={"#c586c0"}
       fontFamily={"monospace"}
       offset={[-1, 0]}
       x={cCodeX}
       y={cCodeStartY + cLineSpacing * 3}
       opacity={0}
-    />,
+    >
+      <Txt fill={"#c586c0"}>{"    return "}</Txt>
+      <Txt fill={"#9cdcfe"}>{"result"}</Txt>
+      <Txt fill={"#d4d4d4"}>{";"}</Txt>
+    </Txt>,
   );
 
   view.add(
     <Txt
       ref={cCodeLine5}
-      text="}"
+      text={"}"}
       fontSize={20}
-      fill={"#ffffff"}
+      fill={"#d4d4d4"}
       fontFamily={"monospace"}
       offset={[-1, 0]}
       x={cCodeX}
@@ -336,21 +353,23 @@ export default makeScene2D(function* (view) {
   // Assembly lines
   const asmCode = [
     "sum:",
-    "    push rbp",
-    "    mov rbp, rsp",
-    "    mov QWORD PTR [rbp-24], rdi",
-    "    mov QWORD PTR [rbp-32], rsi",
-    "    mov rdx, QWORD PTR [rbp-24]",
-    "    mov rax, QWORD PTR [rbp-32]",
-    "    add rax, rdx",
-    "    mov QWORD PTR [rbp-8], rax",
-    "    mov rax, QWORD PTR [rbp-8]",
-    "    pop rbp",
+    "    push    rbp",
+    "    mov     rbp, rsp",
+    "    sub     rsp, 24",
+    "    mov     QWORD PTR [rbp-16], rdi",
+    "    mov     QWORD PTR [rbp-24], rsi",
+    "    mov     rdx, QWORD PTR [rbp-16]",
+    "    mov     rax, QWORD PTR [rbp-24]",
+    "    add     rax, rdx",
+    "    mov     QWORD PTR [rbp-8], rax",
+    "    mov     rax, QWORD PTR [rbp-8]",
+    "    mov     rsp, rbp",
+    "    pop     rbp",
     "    ret",
   ];
 
   const asmStartY = cCodeStartY - 20;
-  const asmLineSpacing = 26;
+  const asmLineSpacing = 22;
 
   asmCode.forEach((line, i) => {
     const isLabel = line.endsWith(":");
@@ -372,9 +391,9 @@ export default makeScene2D(function* (view) {
 
   // ============ REGISTERS ============
 
-  const registers = ["RSP", "RBP", "RDI", "RSI", "RAX"];
-  const regInitialValues = ["0xFFF8", "0xFFFF", "5", "3", "?"];
-  const regColors = ["#4ec9b0", "#ce9178", "#dcdcaa", "#dcdcaa", "#c586c0"];
+  const registers = ["RSP", "RBP", "RDI", "RSI", "RDX", "RAX"];
+  const regInitialValues = ["0xFFF8", "0xFFFF", "5", "3", "?", "?"];
+  const regColors = ["#4ec9b0", "#ce9178", "#dcdcaa", "#dcdcaa", "#dcdcaa", "#c586c0"];
 
   registers.forEach((reg, i) => {
     const x = regStartX + i * regSpacing;
@@ -435,12 +454,14 @@ export default makeScene2D(function* (view) {
   // Mostra titolo stack
   yield* stackTitle().opacity(1, 0.5);
 
-  // Mostra indirizzi e celle (solo le prime 2 inizialmente visibili)
+  // Mostra indirizzi e tutte le celle
   yield* all(
-    stackAddressLabels[0].opacity(1, 0.3),
-    stackAddressLabels[1].opacity(1, 0.3),
-    stackCells[0].opacity(1, 0.3),
-    stackCells[1].opacity(1, 0.3),
+    ...stackAddresses.map((_, i) =>
+      all(
+        stackCells[i].opacity(1, 0.3),
+        stackAddressLabels[i].opacity(1, 0.3),
+      ),
+    ),
   );
 
   // Mostra registri
@@ -499,21 +520,31 @@ export default makeScene2D(function* (view) {
     yield* regValues[regIndex].text(newValue, 0.3);
   };
 
-  // Helper per mostrare cella stack
+  // Helper per mostrare valore in cella stack (celle già visibili)
   const showStackCell = function* (
     cellIndex: number,
     value: string,
     label: string,
   ) {
     yield* all(
-      stackAddressLabels[cellIndex].opacity(1, 0.3),
-      stackCells[cellIndex].opacity(1, 0.3),
-    );
-    yield* all(
       stackCellValues[cellIndex].text(value, 0.3),
       stackCellValues[cellIndex].opacity(1, 0.3),
       stackCellLabels[cellIndex].text(label, 0.3),
       stackCellLabels[cellIndex].opacity(1, 0.3),
+    );
+  };
+
+  // Helper per evidenziare registro (flash bianco + ingrandimento)
+  const highlightReg = function* (regIndex: number) {
+    yield* all(
+      regBoxes[regIndex].stroke("#ffffff", 0.2),
+      regBoxes[regIndex].lineWidth(6, 0.2),
+      regBoxes[regIndex].scale(1.12, 0.2),
+    );
+    yield* all(
+      regBoxes[regIndex].stroke(regColors[regIndex], 0.4),
+      regBoxes[regIndex].lineWidth(3, 0.4),
+      regBoxes[regIndex].scale(1, 0.4),
     );
   };
 
@@ -532,9 +563,9 @@ export default makeScene2D(function* (view) {
     );
   };
 
-  // Helper per muovere/mostrare RBP
+  // Helper per muovere/mostrare RBP (offset +14px per non sovrapporre RSP)
   const moveRBP = function* (cellIndex: number) {
-    const y = stackStartY + cellIndex * (stackCellHeight + 5);
+    const y = stackStartY + cellIndex * (stackCellHeight + 5) + 14;
     yield* all(
       rbpArrow().opacity(1, 0.3),
       rbpLabel().opacity(1, 0.3),
@@ -551,85 +582,113 @@ export default makeScene2D(function* (view) {
   };
 
   // --- Istruzione 1: push rbp ---
-  yield* highlightLine(1); // "push rbp"
+  yield* highlightLine(1);
 
-  // RSP si sposta a 0xFFF0, salva old RBP value
-  yield* updateRegValue(0, "0xFFF0"); // RSP = 0xFFF0
+  yield* all(updateRegValue(0, "0xFFF0"), highlightReg(0)); // RSP = 0xFFF0
   yield* moveRSP(1); // RSP punta a cella 1 (0xFFF0)
   yield* showStackCell(1, "0xFFFF", "old RBP");
 
   yield* beginSlide("Stack: push rbp");
 
   // --- Istruzione 2: mov rbp, rsp ---
-  yield* highlightLine(2); // "mov rbp, rsp"
+  yield* highlightLine(2);
 
-  yield* updateRegValue(1, "0xFFF0"); // RBP = RSP = 0xFFF0
-  yield* moveRBP(1); // RBP punta alla stessa cella di RSP
+  yield* all(updateRegValue(1, "0xFFF0"), highlightReg(1)); // RBP = RSP = 0xFFF0
+  yield* moveRBP(1);
 
   yield* beginSlide("Stack: mov rbp, rsp");
 
-  // --- Istruzione 3: mov QWORD PTR [rbp-24], rdi ---
+  // --- Istruzione 3: sub rsp, 24 ---
   yield* highlightLine(3);
 
-  // Mostra cella a rbp-24 (0xFFD8)
-  yield* showStackCell(4, "5", "a (rdi)");
+  yield* all(updateRegValue(0, "0xFFD8"), highlightReg(0)); // RSP = 0xFFF0 - 24 = 0xFFD8
+  yield* moveRSP(4); // RSP punta a cella 4 (0xFFD8)
+
+  yield* beginSlide("Stack: sub rsp, 24");
+
+  // --- Istruzione 4: mov QWORD PTR [rbp-16], rdi ---
+  yield* highlightLine(4);
+
+  yield* all(showStackCell(3, "5", "a (rdi)"), highlightReg(2)); // cell 3 = 0xFFE0 = rbp-16
 
   yield* beginSlide("Stack: store a");
 
-  // --- Istruzione 4: mov QWORD PTR [rbp-32], rsi ---
-  yield* highlightLine(4);
+  // --- Istruzione 5: mov QWORD PTR [rbp-24], rsi ---
+  yield* highlightLine(5);
 
-  // Mostra cella a rbp-32 (0xFFD0)
-  yield* showStackCell(5, "3", "b (rsi)");
+  yield* all(showStackCell(4, "3", "b (rsi)"), highlightReg(3)); // cell 4 = 0xFFD8 = rbp-24
 
   yield* beginSlide("Stack: store b");
 
-  // --- Istruzione 5: mov rdx, QWORD PTR [rbp-24] ---
-  yield* highlightLine(5);
+  // --- Istruzione 6: mov rdx, QWORD PTR [rbp-16] ---
+  yield* highlightLine(6);
 
-  // rdx = 5 (carica a da memoria) - mostra visivamente
-  yield* stackCells[4].stroke("#dcdcaa", 0.3);
-  yield* stackCells[4].stroke("#569cd6", 0.3);
+  // Flash cella 3 (lettura da memoria), RDX = 5
+  yield* all(
+    stackCells[3].stroke("#dcdcaa", 0.3),
+    updateRegValue(4, "5"),
+    highlightReg(4),
+  );
+  yield* stackCells[3].stroke("#569cd6", 0.3);
 
   yield* beginSlide("Stack: load a → rdx");
 
-  // --- Istruzione 6: mov rax, QWORD PTR [rbp-32] ---
-  yield* highlightLine(6);
+  // --- Istruzione 7: mov rax, QWORD PTR [rbp-24] ---
+  yield* highlightLine(7);
 
-  yield* updateRegValue(4, "3"); // RAX = 3
-  yield* stackCells[5].stroke("#c586c0", 0.3);
-  yield* stackCells[5].stroke("#569cd6", 0.3);
+  // Flash cella 4 (lettura da memoria), RAX = 3
+  yield* all(
+    stackCells[4].stroke("#c586c0", 0.3),
+    updateRegValue(5, "3"),
+    highlightReg(5),
+  );
+  yield* stackCells[4].stroke("#569cd6", 0.3);
 
   yield* beginSlide("Stack: load b → rax");
 
-  // --- Istruzione 7: add rax, rdx ---
-  yield* highlightLine(7);
+  // --- Istruzione 8: add rax, rdx ---
+  yield* highlightLine(8);
 
-  yield* updateRegValue(4, "8"); // RAX = 3 + 5 = 8
+  yield* all(updateRegValue(5, "8"), highlightReg(5)); // RAX = 3 + 5 = 8
 
   yield* beginSlide("Stack: add rax, rdx");
 
-  // --- Istruzione 8: mov QWORD PTR [rbp-8], rax ---
-  yield* highlightLine(8);
+  // --- Istruzione 9: mov QWORD PTR [rbp-8], rax ---
+  yield* highlightLine(9);
 
-  // Mostra cella result a rbp-8 (0xFFE8)
-  yield* showStackCell(2, "8", "result");
+  yield* all(showStackCell(2, "8", "result"), highlightReg(5)); // cell 2 = 0xFFE8 = rbp-8
 
   yield* beginSlide("Stack: store result");
 
-  // --- Istruzione 9: mov rax, QWORD PTR [rbp-8] ---
-  yield* highlightLine(9);
+  // --- Istruzione 10: mov rax, QWORD PTR [rbp-8] ---
+  yield* highlightLine(10);
 
-  yield* stackCells[2].stroke("#c586c0", 0.3);
+  // Flash cella 2 (lettura da memoria), RAX = 8 (già impostato)
+  yield* all(
+    stackCells[2].stroke("#c586c0", 0.3),
+    highlightReg(5),
+  );
   yield* stackCells[2].stroke("#569cd6", 0.3);
 
   yield* beginSlide("Stack: load result → rax");
 
-  // --- Istruzione 10: pop rbp ---
-  yield* highlightLine(10);
+  // --- Istruzione 11: mov rsp, rbp ---
+  yield* highlightLine(11);
 
-  yield* updateRegValue(1, "0xFFFF"); // RBP ripristinato
-  yield* updateRegValue(0, "0xFFF8"); // RSP torna a 0xFFF8
+  yield* all(updateRegValue(0, "0xFFF0"), highlightReg(0)); // RSP = RBP = 0xFFF0
+  yield* moveRSP(1); // RSP torna a cella 1
+
+  yield* beginSlide("Stack: mov rsp, rbp");
+
+  // --- Istruzione 12: pop rbp ---
+  yield* highlightLine(12);
+
+  yield* all(
+    updateRegValue(1, "0xFFFF"),
+    updateRegValue(0, "0xFFF8"),
+    highlightReg(1),
+    highlightReg(0),
+  );
 
   yield* all(
     moveRSP(0),
@@ -637,14 +696,21 @@ export default makeScene2D(function* (view) {
     rbpLabel().opacity(0, 0.3),
   );
 
-  // Cella old RBP diventa grigia (deallocata)
-  yield* stackCells[1].fill("#1a1a1a", 0.3);
-  yield* stackCellValues[1].fill("#808080", 0.3);
+  // Celle deallocate diventano grigie
+  for (let i = 1; i <= 4; i++) {
+    yield* all(
+      stackCells[i].fill("#1a1a1a", 0.2),
+      stackCellValues[i].fill("#808080", 0.2),
+    );
+  }
 
   yield* beginSlide("Stack: pop rbp");
 
-  // --- Istruzione 11: ret ---
-  yield* highlightLine(11);
+  // --- Istruzione 13: ret ---
+  yield* highlightLine(13);
+
+  // Evidenzia RAX (valore di ritorno)
+  yield* highlightReg(5);
 
   // Animazione finale - highlight verde per successo
   yield* asmHighlight().fill("#2d4a2d", 0.3);
@@ -653,7 +719,7 @@ export default makeScene2D(function* (view) {
 
   // Fine - mostra risultato finale
   yield* asmHighlight().opacity(0, 0.3);
-  yield* regBoxes[4].stroke("#4ec9b0", 0.5); // Evidenzia RAX con il risultato
+  yield* regBoxes[5].stroke("#4ec9b0", 0.5); // Evidenzia RAX con il risultato
 
   yield* beginSlide("Stack: Complete");
 });
