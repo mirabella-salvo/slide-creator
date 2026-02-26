@@ -638,7 +638,8 @@ export default makeScene2D(function* (view) {
   const inclSrcBox = createRef<Rect>();
   const inclSrcTitle = createRef<Txt>();
   const inclSrcLine1 = createRef<Txt>(); // #include <stdio.h>
-  const inclSrcLine2 = createRef<Txt>(); // int main() {
+  const inclSrcLine2 = createRef<Txt>(); // int main()
+  const inclSrcLine2b = createRef<Txt>(); // {
   const inclSrcLine3 = createRef<Txt>(); //     printf("Hello!");
   const inclSrcLine4 = createRef<Txt>(); //     return 0;
   const inclSrcLine5 = createRef<Txt>(); // }
@@ -726,7 +727,7 @@ export default makeScene2D(function* (view) {
       fontFamily={"monospace"}
       offset={[-1, 0]}
       x={srcCodeX}
-      y={-50}
+      y={-62}
       opacity={0}
     >
       <Txt fill={"#c586c0"}>{"#include "}</Txt>
@@ -741,13 +742,27 @@ export default makeScene2D(function* (view) {
       fontFamily={"monospace"}
       offset={[-1, 0]}
       x={srcCodeX}
-      y={-15}
+      y={-37}
       opacity={0}
     >
       <Txt fill={"#569cd6"}>{"int "}</Txt>
       <Txt fill={"#dcdcaa"}>{"main"}</Txt>
-      <Txt fill={"#d4d4d4"}>{"() {"}</Txt>
+      <Txt fill={"#d4d4d4"}>{"()"}</Txt>
     </Txt>,
+  );
+
+  view.add(
+    <Txt
+      ref={inclSrcLine2b}
+      text={"{"}
+      fontSize={16}
+      fill={"#d4d4d4"}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={srcCodeX}
+      y={-12}
+      opacity={0}
+    />,
   );
 
   view.add(
@@ -757,11 +772,11 @@ export default makeScene2D(function* (view) {
       fontFamily={"monospace"}
       offset={[-1, 0]}
       x={srcCodeX}
-      y={15}
+      y={13}
       opacity={0}
     >
       <Txt fill={"#d4d4d4"}>{"  "}</Txt>
-      <Txt fill={"#dcdcaa"}>{"printf"}</Txt>
+      <Txt fill={"#dcdcaa"}>{"  printf"}</Txt>
       <Txt fill={"#d4d4d4"}>{"("}</Txt>
       <Txt fill={"#ce9178"}>{'"Hello!"'}</Txt>
       <Txt fill={"#d4d4d4"}>{");"}</Txt>
@@ -775,11 +790,11 @@ export default makeScene2D(function* (view) {
       fontFamily={"monospace"}
       offset={[-1, 0]}
       x={srcCodeX}
-      y={45}
+      y={38}
       opacity={0}
     >
       <Txt fill={"#d4d4d4"}>{"  "}</Txt>
-      <Txt fill={"#c586c0"}>{"return "}</Txt>
+      <Txt fill={"#c586c0"}>{"  return "}</Txt>
       <Txt fill={"#b5cea8"}>{"0"}</Txt>
       <Txt fill={"#d4d4d4"}>{";"}</Txt>
     </Txt>,
@@ -792,7 +807,7 @@ export default makeScene2D(function* (view) {
       fontFamily={"monospace"}
       offset={[-1, 0]}
       x={srcCodeX}
-      y={75}
+      y={63}
       opacity={0}
     >
       <Txt fill={"#d4d4d4"}>{"}"}</Txt>
@@ -1160,11 +1175,11 @@ export default makeScene2D(function* (view) {
       opacity={0}
     >
       <Txt fill={"#d4d4d4"}>{"    "}</Txt>
-      <Txt fill={"#c586c0"}>{"return "}</Txt>
-      <Txt fill={"#9cdcfe"}>{"a "}</Txt>
-      <Txt fill={"#d4d4d4"}>{"+ "}</Txt>
-      <Txt fill={"#9cdcfe"}>{"b"}</Txt>
-      <Txt fill={"#d4d4d4"}>{";"}</Txt>
+      <Txt fill={"#c586c0"}>{" return "}</Txt>
+      <Txt fill={"#9cdcfe"}>{" a "}</Txt>
+      <Txt fill={"#d4d4d4"}>{" + "}</Txt>
+      <Txt fill={"#9cdcfe"}>{" b"}</Txt>
+      <Txt fill={"#d4d4d4"}>{" ;"}</Txt>
     </Txt>,
   );
 
@@ -1920,12 +1935,34 @@ export default makeScene2D(function* (view) {
 
   // Highlight main.o (copre quasi tutto il binario)
   view.add(
-    <Rect ref={linkMainHighlight} width={190} height={170} fill={"#569cd620"} stroke={"#569cd6"} lineWidth={1} x={-350} y={-50} opacity={0} radius={4} />,
+    <Rect
+      ref={linkMainHighlight}
+      width={190}
+      height={170}
+      fill={"#569cd620"}
+      stroke={"#569cd6"}
+      lineWidth={1}
+      x={-350}
+      y={-50}
+      opacity={0}
+      radius={4}
+    />,
   );
 
   // Highlight stdio.o (copre solo ~2 righe - la funzione printf)
   view.add(
-    <Rect ref={linkStdioHighlight} width={190} height={28} fill={"#569cd620"} stroke={"#569cd6"} lineWidth={1} x={-350} y={139} opacity={0} radius={4} />,
+    <Rect
+      ref={linkStdioHighlight}
+      width={190}
+      height={28}
+      fill={"#569cd620"}
+      stroke={"#569cd6"}
+      lineWidth={1}
+      x={-350}
+      y={139}
+      opacity={0}
+      radius={4}
+    />,
   );
 
   // Binario espanso main.o (fase 2)
@@ -1960,9 +1997,24 @@ export default makeScene2D(function* (view) {
 
   // Muro di binario (fase 3)
   view.add(
-    <Txt ref={linkBinWall} fontSize={11} fontFamily={"monospace"} x={0} y={50} opacity={0}>
-      <Txt fill={"#569cd6"}>{"0011010100101010001010000110100011\n1001111100010101010101010101010010\n1101010101010000111111000100101001\n0011100100101010010001101001000101\n1001101010010100100010100010100110\n1100111100010101001010101010101001\n0110101010101101011010001101010010\n0100010100011100100111000110001110\n0100010100111100100111010001000101\n1001101010100010101001011010000110\n0100101001101010001100111100010101\n1100111000101010010010100110101001\n0100010100011101001010001101001010\n0011010100101000101010001100100110\n1001111000101010011001110111000110\n"}</Txt>
-      <Txt fill={"#4ec9b0"}>{"1101010101000011010001010011110010\n0100010100111100100111010001000100\n1001101010100010101001011010000110\n0100101001101010001100111100010110\n1100111000101010010010100110101001\n0100010100011101001010001101001010\n1001101010010100100010100010100110\n1100111100010101001010101010101001"}</Txt>
+    <Txt
+      ref={linkBinWall}
+      fontSize={11}
+      fontFamily={"monospace"}
+      x={0}
+      y={50}
+      opacity={0}
+    >
+      <Txt fill={"#569cd6"}>
+        {
+          "0011010100101010001010000110100011\n1001111100010101010101010101010010\n1101010101010000111111000100101001\n0011100100101010010001101001000101\n1001101010010100100010100010100110\n1100111100010101001010101010101001\n0110101010101101011010001101010010\n0100010100011100100111000110001110\n0100010100111100100111010001000101\n1001101010100010101001011010000110\n0100101001101010001100111100010101\n1100111000101010010010100110101001\n0100010100011101001010001101001010\n0011010100101000101010001100100110\n1001111000101010011001110111000110\n"
+        }
+      </Txt>
+      <Txt fill={"#4ec9b0"}>
+        {
+          "1101010101000011010001010011110010\n0100010100111100100111010001000100\n1001101010100010101001011010000110\n0100101001101010001100111100010110\n1100111000101010010010100110101001\n0100010100011101001010001101001010\n1001101010010100100010100010100110\n1100111100010101001010101010101001"
+        }
+      </Txt>
     </Txt>,
   );
 
@@ -2241,9 +2293,10 @@ export default makeScene2D(function* (view) {
   yield* all(inclSrcBox().opacity(1, 0.4), inclSrcTitle().opacity(1, 0.4));
   yield* inclSrcLine1().opacity(1, 0.3);
   yield* inclSrcLine2().opacity(1, 0.3);
+  yield* inclSrcLine2b().opacity(1, 0.2);
   yield* inclSrcLine3().opacity(1, 0.3);
   yield* inclSrcLine4().opacity(1, 0.3);
-  yield* inclSrcLine5().opacity(1, 0.3);
+  yield* inclSrcLine5().opacity(1, 0.2);
 
   yield* beginSlide("Pre-Processor: #include");
 
@@ -2266,10 +2319,11 @@ export default makeScene2D(function* (view) {
   // Le righe sotto si spostano in basso per fare spazio
   yield* all(
     inclSrcLine1().opacity(0, 0.4),
-    inclSrcLine2().y(5, 0.5),
-    inclSrcLine3().y(35, 0.5),
-    inclSrcLine4().y(65, 0.5),
-    inclSrcLine5().y(95, 0.5),
+    inclSrcLine2().y(0, 0.5),
+    inclSrcLine2b().y(25, 0.5),
+    inclSrcLine3().y(50, 0.5),
+    inclSrcLine4().y(75, 0.5),
+    inclSrcLine5().y(100, 0.5),
   );
 
   yield* all(
@@ -2289,6 +2343,7 @@ export default makeScene2D(function* (view) {
     inclSrcTitle().opacity(0, 0.4),
     inclSrcLine1().opacity(0, 0.4),
     inclSrcLine2().opacity(0, 0.4),
+    inclSrcLine2b().opacity(0, 0.4),
     inclSrcLine3().opacity(0, 0.4),
     inclSrcLine4().opacity(0, 0.4),
     inclSrcLine5().opacity(0, 0.4),

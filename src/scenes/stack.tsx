@@ -296,7 +296,8 @@ export default makeScene2D(function* (view) {
       y={cCodeStartY + cLineSpacing * 2}
       opacity={0}
     >
-      <Txt fill={"#569cd6"}>{"    int "}</Txt>
+      <Txt fill={"#d4d4d4"}>{"    "}</Txt>
+      <Txt fill={"#569cd6"}>{"int "}</Txt>
       <Txt fill={"#9cdcfe"}>{"result"}</Txt>
       <Txt fill={"#d4d4d4"}>{" = "}</Txt>
       <Txt fill={"#9cdcfe"}>{"a"}</Txt>
@@ -316,7 +317,8 @@ export default makeScene2D(function* (view) {
       y={cCodeStartY + cLineSpacing * 3}
       opacity={0}
     >
-      <Txt fill={"#c586c0"}>{"    return "}</Txt>
+      <Txt fill={"#d4d4d4"}>{"    "}</Txt>
+      <Txt fill={"#c586c0"}>{"return "}</Txt>
       <Txt fill={"#9cdcfe"}>{"result"}</Txt>
       <Txt fill={"#d4d4d4"}>{";"}</Txt>
     </Txt>,
