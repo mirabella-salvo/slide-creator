@@ -7,12 +7,14 @@ import presentazioneMarketing from "./scenes/presentazione-marketing?scene";
 import gccIntro from "./scenes/gcc-intro?scene";
 import stack from "./scenes/stack?scene";
 import registers from "./scenes/registers?scene";
+import elfFile from "./scenes/elf-file?scene";
 
 export default makeProject({
   // Aggiungi qui le scene che vuoi usare
   // Puoi commentare/decommentare per switchare rapidamente
   scenes: [
     gccIntro,
+    elfFile,
     stack,
     registers,
     // presentazioneGenerale,
