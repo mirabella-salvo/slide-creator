@@ -12,13 +12,5 @@ import elfFile from "./scenes/elf-file?scene";
 export default makeProject({
   // Aggiungi qui le scene che vuoi usare
   // Puoi commentare/decommentare per switchare rapidamente
-  scenes: [
-    gccIntro,
-    elfFile,
-    stack,
-    registers,
-    // presentazioneGenerale,
-    // presentazioneTecnica,
-    // presentazioneMarketing,
-  ],
+  scenes: [gccIntro, elfFile, registers, stack],
 });

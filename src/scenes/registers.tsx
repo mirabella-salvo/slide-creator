@@ -43,7 +43,7 @@ export default makeScene2D(function* (view) {
   const REG_BOX_H = 90;
   const TABLE_START_Y = -220;
   const TABLE_COL_SP = 195;
-  const TABLE_ROW_SP = 130;
+  const TABLE_ROW_SP = 180;
 
   // Numero colonne per riga (per centrare ogni riga)
   const rowCols: Record<number, number> = { 0: 4, 1: 2, 2: 2 };
@@ -101,13 +101,7 @@ export default makeScene2D(function* (view) {
   // ============ JSX: BARRA EVOLUZIONE ============
 
   view.add(
-    <Rect
-      ref={barContainer}
-      x={0}
-      y={BAR_Y}
-      layout={false}
-      opacity={0}
-    >
+    <Rect ref={barContainer} x={0} y={BAR_Y} layout={false} opacity={0}>
       {/* RAX upper (leftmost, purple) */}
       <Rect
         ref={raxUpperRect}
@@ -300,13 +294,7 @@ export default makeScene2D(function* (view) {
   // ============ JSX: TABELLA REGISTRI ============
 
   view.add(
-    <Rect
-      ref={tableContainer}
-      x={0}
-      y={0}
-      layout={false}
-      opacity={0}
-    >
+    <Rect ref={tableContainer} x={0} y={0} layout={false} opacity={0}>
       <Txt
         ref={tableTitle}
         x={0}
@@ -337,7 +325,7 @@ export default makeScene2D(function* (view) {
       <Txt
         ref={tableCategoryLabels}
         x={0}
-        y={TABLE_START_Y + cat.row * TABLE_ROW_SP - 60}
+        y={TABLE_START_Y + cat.row * TABLE_ROW_SP - 75}
         text={cat.label}
         fontSize={22}
         fill={cat.color}
@@ -463,10 +451,7 @@ export default makeScene2D(function* (view) {
 
   // === SLIDE 6: Transizione a tabella ===
 
-  yield* all(
-    barContainer().opacity(0, 0.5),
-    evolutionNote().opacity(0, 0.5),
-  );
+  yield* all(barContainer().opacity(0, 0.5), evolutionNote().opacity(0, 0.5));
 
   yield* tableContainer().opacity(1, 0.3);
   yield* tableTitle().opacity(1, 0.6);

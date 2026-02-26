@@ -292,11 +292,10 @@ export default makeScene2D(function* (view) {
       fontSize={20}
       fontFamily={"monospace"}
       offset={[-1, 0]}
-      x={cCodeX}
+      x={cCodeX + 48}
       y={cCodeStartY + cLineSpacing * 2}
       opacity={0}
     >
-      <Txt fill={"#d4d4d4"}>{"    "}</Txt>
       <Txt fill={"#569cd6"}>{"int "}</Txt>
       <Txt fill={"#9cdcfe"}>{"result"}</Txt>
       <Txt fill={"#d4d4d4"}>{" = "}</Txt>
@@ -313,11 +312,10 @@ export default makeScene2D(function* (view) {
       fontSize={20}
       fontFamily={"monospace"}
       offset={[-1, 0]}
-      x={cCodeX}
+      x={cCodeX + 48}
       y={cCodeStartY + cLineSpacing * 3}
       opacity={0}
     >
-      <Txt fill={"#d4d4d4"}>{"    "}</Txt>
       <Txt fill={"#c586c0"}>{"return "}</Txt>
       <Txt fill={"#9cdcfe"}>{"result"}</Txt>
       <Txt fill={"#d4d4d4"}>{";"}</Txt>
@@ -395,7 +393,14 @@ export default makeScene2D(function* (view) {
 
   const registers = ["RSP", "RBP", "RDI", "RSI", "RDX", "RAX"];
   const regInitialValues = ["0xFFF8", "0xFFFF", "5", "3", "?", "?"];
-  const regColors = ["#4ec9b0", "#ce9178", "#dcdcaa", "#dcdcaa", "#dcdcaa", "#c586c0"];
+  const regColors = [
+    "#4ec9b0",
+    "#ce9178",
+    "#dcdcaa",
+    "#dcdcaa",
+    "#dcdcaa",
+    "#c586c0",
+  ];
 
   registers.forEach((reg, i) => {
     const x = regStartX + i * regSpacing;
@@ -459,10 +464,7 @@ export default makeScene2D(function* (view) {
   // Mostra indirizzi e tutte le celle
   yield* all(
     ...stackAddresses.map((_, i) =>
-      all(
-        stackCells[i].opacity(1, 0.3),
-        stackAddressLabels[i].opacity(1, 0.3),
-      ),
+      all(stackCells[i].opacity(1, 0.3), stackAddressLabels[i].opacity(1, 0.3)),
     ),
   );
 
@@ -666,10 +668,7 @@ export default makeScene2D(function* (view) {
   yield* highlightLine(10);
 
   // Flash cella 2 (lettura da memoria), RAX = 8 (già impostato)
-  yield* all(
-    stackCells[2].stroke("#c586c0", 0.3),
-    highlightReg(5),
-  );
+  yield* all(stackCells[2].stroke("#c586c0", 0.3), highlightReg(5));
   yield* stackCells[2].stroke("#569cd6", 0.3);
 
   yield* beginSlide("Stack: load result → rax");
