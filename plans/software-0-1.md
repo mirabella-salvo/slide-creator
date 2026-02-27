@@ -15,6 +15,78 @@
 - **Link**: [https://www.youtube.com/watch?v=XJC5WB2Bwrc](https://www.youtube.com/watch?v=XJC5WB2Bwrc)
 - **Timestamp**: 03:00 - 08:00 (5 minuti)
 
+## Extra:
+
+Cambiare titolo in "Compiler Toolchain"
+rimuovere GCC- Titolo, GNU vs GCC Opzioni Comuni, comabdo Base, Esempio Pratico.
+Aggiungere animazione main C to main.exe
+
+Nelle fasi del compilatore, la freccietta deve apparire nela fase succesiva alla apparizione del componetne main.c
+nella fase di visione fare uno zoom tipo capitolo nella card del pre processor e mostrare i seguenti esempi:
+
+fasi:
+
+1. evidenzia il primo len.
+2. evidenzia i len successivi.
+3. sostituisci i len sotto con il 200
+
+#define LEN 200
+
+int evaluate()
+{
+int array[LEN];
+for (int i = 0; i < LEN; i++)
+{
+// Something with array[i];
+}
+}
+
+Fasi:
+come quelle precenti
+#define VALUE rand()
+
+int evaluate()
+{
+int array[VALUE];
+for (int i = 0; i < VALUE; i++)
+{
+// some operations
+}
+}
+
+fase 3
+come da video.
+#include <stdio.h>
+
+int evaluate()
+{
+printf("Hello, World!\n");
+}
+
+far rimanere freccia tra peprocessor e compiler
+
+Compiler:
+
+int sum(int a, int b)
+{
+return a + b;
+}
+
+sum:
+push rbp
+mov rbp, rsp
+mov QWORD PTR [rbp-24], rdi
+mov QWORD PTR [rbp-32], rsi
+mov rdx, QWORD PTR [rbp-24]
+mov rax, QWORD PTR [rbp-32]
+add rax, rdx
+mov QWORD PTR [rbp-8], rax
+mov rax, QWORD PTR [rbp-8]
+pop rbp
+ret
+
+nel Linker mettere main.o e libc
+
 ### 2. Stack
 
 - **Link**: [https://youtu.be/u\_-oQx_4jvo](https://youtu.be/u_-oQx_4jvo)
@@ -24,6 +96,8 @@
   - LIFO (Last In First Out)
   - Operazioni push e pop
   - Stack Frame
+
+  codice assemply allineato a sinistra e non centrale, e metterre la box con il codice a destra.
 
 ### 3. Registers
 
