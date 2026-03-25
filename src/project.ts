@@ -1,16 +1,14 @@
 import { makeProject } from "@motion-canvas/core";
 
 // Importa tutte le tue presentazioni
-import presentazioneGenerale from "./scenes/presentation?scene";
-import presentazioneTecnica from "./scenes/presentazione-tecnica?scene";
-import presentazioneMarketing from "./scenes/presentazione-marketing?scene";
-import gccIntro from "./scenes/gcc-intro?scene";
-import stack from "./scenes/stack?scene";
-import registers from "./scenes/registers?scene";
-import elfFile from "./scenes/elf-file?scene";
+// import gccIntro from "./scenes/gcc-intro?scene";
+// import stack from "./scenes/stack?scene";
+// import registers from "./scenes/registers?scene";
+// import elfFile from "./scenes/elf-file?scene";
+import stackOverflow from "./scenes/stack-overflow?scene";
 
 export default makeProject({
   // Aggiungi qui le scene che vuoi usare
   // Puoi commentare/decommentare per switchare rapidamente
-  scenes: [gccIntro, elfFile, registers, stack],
+  scenes: [stackOverflow],
 });
