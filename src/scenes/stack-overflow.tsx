@@ -915,10 +915,38 @@ export default makeScene2D(function* (view) {
   // ============ ANIMAZIONI ============
 
   // ==========================================
-  // FASE 1: Mostra Codice C
+  // MEMORY LAYOUT DIAGRAM (prima slide)
   // ==========================================
 
-  yield* beginSlide("BO: C Code");
+  // Fade in tutto il memory layout
+  yield* all(
+    memAddrTop().opacity(1, 0.5),
+    memAddrBottom().opacity(1, 0.5),
+    ...memSectionData.map((_, i) => memSections[i].opacity(1, 0.5)),
+    memGapLine().opacity(1, 0.5),
+    stackArrow1().opacity(1, 0.5),
+    stackArrow2().opacity(1, 0.5),
+    heapArrow1().opacity(1, 0.5),
+    heapArrow2().opacity(1, 0.5),
+  );
+
+  yield* beginSlide("Mem: Full Layout");
+
+  // Fade out memory layout
+  yield* all(
+    memAddrTop().opacity(0, 0.4),
+    memAddrBottom().opacity(0, 0.4),
+    ...memSectionData.map((_, i) => memSections[i].opacity(0, 0.4)),
+    memGapLine().opacity(0, 0.4),
+    stackArrow1().opacity(0, 0.4),
+    stackArrow2().opacity(0, 0.4),
+    heapArrow1().opacity(0, 0.4),
+    heapArrow2().opacity(0, 0.4),
+  );
+
+  // ==========================================
+  // FASE 1: Mostra Codice C
+  // ==========================================
 
   yield* all(codeBox().opacity(1, 0.5), codeBoxTitle().opacity(1, 0.5));
 
@@ -1241,29 +1269,4 @@ export default makeScene2D(function* (view) {
     rbpLabel().opacity(0, 0.3),
   );
 
-  // ==========================================
-  // MEMORY LAYOUT DIAGRAM
-  // ==========================================
-
-  // Fade out lezione finale
-  yield* all(phaseTitle().opacity(0, 0.4), phaseSubtitle().opacity(0, 0.4));
-
-  // Fade in tutto il memory layout in una singola slide
-  yield* all(
-    // Indirizzi
-    memAddrTop().opacity(1, 0.5),
-    memAddrBottom().opacity(1, 0.5),
-    // Tutte le sezioni (titolo e desc sono figli del Rect)
-    ...memSectionData.map((_, i) => memSections[i].opacity(1, 0.5)),
-    // Gap tratteggiato
-    memGapLine().opacity(1, 0.5),
-    // Frecce stack ↓
-    stackArrow1().opacity(1, 0.5),
-    stackArrow2().opacity(1, 0.5),
-    // Frecce heap ↑
-    heapArrow1().opacity(1, 0.5),
-    heapArrow2().opacity(1, 0.5),
-  );
-
-  yield* beginSlide("Mem: Full Layout");
 });
