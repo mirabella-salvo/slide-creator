@@ -275,7 +275,15 @@ export default makeScene2D(function* (view) {
 
   // Line 0: void win()
   view.add(
-    <Txt ref={cCodeLines} fontSize={cFontSize} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX} y={cCodeStartY} opacity={0}>
+    <Txt
+      ref={cCodeLines}
+      fontSize={cFontSize}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY}
+      opacity={0}
+    >
       <Txt fill={BLUE}>{"void "}</Txt>
       <Txt fill={YELLOW}>{"win"}</Txt>
       <Txt fill={GRAY}>{"()"}</Txt>
@@ -284,17 +292,45 @@ export default makeScene2D(function* (view) {
 
   // Line 1: {
   view.add(
-    <Txt ref={cCodeLines} text={"{"} fontSize={cFontSize} fill={GRAY} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX} y={cCodeStartY + cLineSpacing} opacity={0} />,
+    <Txt
+      ref={cCodeLines}
+      text={"{"}
+      fontSize={cFontSize}
+      fill={GRAY}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing}
+      opacity={0}
+    />,
   );
 
   // Line 2:     // ...
   view.add(
-    <Txt ref={cCodeLines} text={"    // ..."} fontSize={cFontSize} fill={GREEN} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX} y={cCodeStartY + cLineSpacing * 2} opacity={0} />,
+    <Txt
+      ref={cCodeLines}
+      text={"    // ..."}
+      fontSize={cFontSize}
+      fill={GREEN}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 2}
+      opacity={0}
+    />,
   );
 
   // Line 3:     return;
   view.add(
-    <Txt ref={cCodeLines} fontSize={cFontSize} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX + indent} y={cCodeStartY + cLineSpacing * 3} opacity={0}>
+    <Txt
+      ref={cCodeLines}
+      fontSize={cFontSize}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX + indent}
+      y={cCodeStartY + cLineSpacing * 3}
+      opacity={0}
+    >
       <Txt fill={PURPLE}>{"return"}</Txt>
       <Txt fill={GRAY}>{";"}</Txt>
     </Txt>,
@@ -302,17 +338,44 @@ export default makeScene2D(function* (view) {
 
   // Line 4: }
   view.add(
-    <Txt ref={cCodeLines} text={"}"} fontSize={cFontSize} fill={GRAY} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX} y={cCodeStartY + cLineSpacing * 4} opacity={0} />,
+    <Txt
+      ref={cCodeLines}
+      text={"}"}
+      fontSize={cFontSize}
+      fill={GRAY}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 4}
+      opacity={0}
+    />,
   );
 
   // Line 5: (blank spacer)
   view.add(
-    <Txt ref={cCodeLines} text={""} fontSize={cFontSize} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX} y={cCodeStartY + cLineSpacing * 5} opacity={0} />,
+    <Txt
+      ref={cCodeLines}
+      text={""}
+      fontSize={cFontSize}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 5}
+      opacity={0}
+    />,
   );
 
   // Line 6: void ask_name()
   view.add(
-    <Txt ref={cCodeLines} fontSize={cFontSize} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX} y={cCodeStartY + cLineSpacing * 6} opacity={0}>
+    <Txt
+      ref={cCodeLines}
+      fontSize={cFontSize}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 6}
+      opacity={0}
+    >
       <Txt fill={BLUE}>{"void "}</Txt>
       <Txt fill={YELLOW}>{"ask_name"}</Txt>
       <Txt fill={GRAY}>{"()"}</Txt>
@@ -321,12 +384,30 @@ export default makeScene2D(function* (view) {
 
   // Line 7: {
   view.add(
-    <Txt ref={cCodeLines} text={"{"} fontSize={cFontSize} fill={GRAY} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX} y={cCodeStartY + cLineSpacing * 7} opacity={0} />,
+    <Txt
+      ref={cCodeLines}
+      text={"{"}
+      fontSize={cFontSize}
+      fill={GRAY}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 7}
+      opacity={0}
+    />,
   );
 
   // Line 8:     char name[16];
   view.add(
-    <Txt ref={cCodeLines} fontSize={cFontSize} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX + indent} y={cCodeStartY + cLineSpacing * 8} opacity={0}>
+    <Txt
+      ref={cCodeLines}
+      fontSize={cFontSize}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX + indent}
+      y={cCodeStartY + cLineSpacing * 8}
+      opacity={0}
+    >
       <Txt fill={BLUE}>{"char "}</Txt>
       <Txt fill={CYAN}>{"name"}</Txt>
       <Txt fill={GRAY}>{"["}</Txt>
@@ -337,7 +418,15 @@ export default makeScene2D(function* (view) {
 
   // Line 9:     gets(name);
   view.add(
-    <Txt ref={cCodeLines} fontSize={cFontSize} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX + indent} y={cCodeStartY + cLineSpacing * 9} opacity={0}>
+    <Txt
+      ref={cCodeLines}
+      fontSize={cFontSize}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX + indent}
+      y={cCodeStartY + cLineSpacing * 9}
+      opacity={0}
+    >
       <Txt fill={YELLOW}>{"gets"}</Txt>
       <Txt fill={GRAY}>{"("}</Txt>
       <Txt fill={CYAN}>{"name"}</Txt>
@@ -347,7 +436,15 @@ export default makeScene2D(function* (view) {
 
   // Line 10:     printf("Hello, %s!\n", name);
   view.add(
-    <Txt ref={cCodeLines} fontSize={cFontSize} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX + indent} y={cCodeStartY + cLineSpacing * 10} opacity={0}>
+    <Txt
+      ref={cCodeLines}
+      fontSize={cFontSize}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX + indent}
+      y={cCodeStartY + cLineSpacing * 10}
+      opacity={0}
+    >
       <Txt fill={YELLOW}>{"printf"}</Txt>
       <Txt fill={GRAY}>{"("}</Txt>
       <Txt fill={ORANGE}>{'"Hello, %s!\\n"'}</Txt>
@@ -359,7 +456,15 @@ export default makeScene2D(function* (view) {
 
   // Line 11:     return;
   view.add(
-    <Txt ref={cCodeLines} fontSize={cFontSize} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX + indent} y={cCodeStartY + cLineSpacing * 11} opacity={0}>
+    <Txt
+      ref={cCodeLines}
+      fontSize={cFontSize}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX + indent}
+      y={cCodeStartY + cLineSpacing * 11}
+      opacity={0}
+    >
       <Txt fill={PURPLE}>{"return"}</Txt>
       <Txt fill={GRAY}>{";"}</Txt>
     </Txt>,
@@ -367,17 +472,44 @@ export default makeScene2D(function* (view) {
 
   // Line 12: }
   view.add(
-    <Txt ref={cCodeLines} text={"}"} fontSize={cFontSize} fill={GRAY} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX} y={cCodeStartY + cLineSpacing * 12} opacity={0} />,
+    <Txt
+      ref={cCodeLines}
+      text={"}"}
+      fontSize={cFontSize}
+      fill={GRAY}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 12}
+      opacity={0}
+    />,
   );
 
   // Line 13: (blank)
   view.add(
-    <Txt ref={cCodeLines} text={""} fontSize={cFontSize} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX} y={cCodeStartY + cLineSpacing * 13} opacity={0} />,
+    <Txt
+      ref={cCodeLines}
+      text={""}
+      fontSize={cFontSize}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 13}
+      opacity={0}
+    />,
   );
 
   // Line 14: int main()
   view.add(
-    <Txt ref={cCodeLines} fontSize={cFontSize} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX} y={cCodeStartY + cLineSpacing * 14} opacity={0}>
+    <Txt
+      ref={cCodeLines}
+      fontSize={cFontSize}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 14}
+      opacity={0}
+    >
       <Txt fill={BLUE}>{"int "}</Txt>
       <Txt fill={YELLOW}>{"main"}</Txt>
       <Txt fill={GRAY}>{"()"}</Txt>
@@ -386,12 +518,30 @@ export default makeScene2D(function* (view) {
 
   // Line 15: {
   view.add(
-    <Txt ref={cCodeLines} text={"{"} fontSize={cFontSize} fill={GRAY} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX} y={cCodeStartY + cLineSpacing * 15} opacity={0} />,
+    <Txt
+      ref={cCodeLines}
+      text={"{"}
+      fontSize={cFontSize}
+      fill={GRAY}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 15}
+      opacity={0}
+    />,
   );
 
   // Line 16:     ask_name();
   view.add(
-    <Txt ref={cCodeLines} fontSize={cFontSize} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX + indent} y={cCodeStartY + cLineSpacing * 16} opacity={0}>
+    <Txt
+      ref={cCodeLines}
+      fontSize={cFontSize}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX + indent}
+      y={cCodeStartY + cLineSpacing * 16}
+      opacity={0}
+    >
       <Txt fill={YELLOW}>{"ask_name"}</Txt>
       <Txt fill={GRAY}>{"();"}</Txt>
     </Txt>,
@@ -399,7 +549,15 @@ export default makeScene2D(function* (view) {
 
   // Line 17:     return 0;
   view.add(
-    <Txt ref={cCodeLines} fontSize={cFontSize} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX + indent} y={cCodeStartY + cLineSpacing * 17} opacity={0}>
+    <Txt
+      ref={cCodeLines}
+      fontSize={cFontSize}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX + indent}
+      y={cCodeStartY + cLineSpacing * 17}
+      opacity={0}
+    >
       <Txt fill={PURPLE}>{"return "}</Txt>
       <Txt fill={NUM_GREEN}>{"0"}</Txt>
       <Txt fill={GRAY}>{";"}</Txt>
@@ -408,7 +566,17 @@ export default makeScene2D(function* (view) {
 
   // Line 18: }
   view.add(
-    <Txt ref={cCodeLines} text={"}"} fontSize={cFontSize} fill={GRAY} fontFamily={"monospace"} offset={[-1, 0]} x={cCodeX} y={cCodeStartY + cLineSpacing * 18} opacity={0} />,
+    <Txt
+      ref={cCodeLines}
+      text={"}"}
+      fontSize={cFontSize}
+      fill={GRAY}
+      fontFamily={"monospace"}
+      offset={[-1, 0]}
+      x={cCodeX}
+      y={cCodeStartY + cLineSpacing * 18}
+      opacity={0}
+    />,
   );
 
   // Code highlight rectangle
@@ -429,15 +597,7 @@ export default makeScene2D(function* (view) {
   // ============ REGISTERS ============
 
   const registers = ["RSP", "RBP", "RDI", "RSI", "RDX", "RAX", "R8"];
-  const regInitialValues = [
-    "0x7FE8",
-    "0x7FF0",
-    "?",
-    "?",
-    "?",
-    "?",
-    "0xDEAD",
-  ];
+  const regInitialValues = ["0x7FE8", "0x7FF0", "?", "?", "?", "?", "0xDEAD"];
   const regColors = [TEAL, ORANGE, YELLOW, YELLOW, YELLOW, PURPLE, GOLD];
 
   registers.forEach((reg, i) => {
@@ -528,70 +688,64 @@ export default makeScene2D(function* (view) {
   );
 
   view.add(
-    <Rect
-      ref={crashBg}
-      width={1920}
-      height={1080}
-      fill={RED}
-      opacity={0}
-    />,
+    <Rect ref={crashBg} width={1920} height={1080} fill={RED} opacity={0} />,
   );
 
   // ============ MEMORY LAYOUT DIAGRAM ============
 
   const memColX = 0;
   const memWidth = 380;
-  const memAddrX = memColX + memWidth / 2 + 80;
+  const memAddrX = memColX + memWidth / 2 + 110;
 
   // Sezioni: nome, descrizione, altezza, colore fill, colore bordo, y center
   const memSectionData = [
     {
       title: "OS Kernel Space",
       desc: "User code cannot read/write\nSegmentation Fault",
-      h: 80,
+      h: 75,
       fill: "#5D1A1A",
       stroke: "#8B0000",
-      yCenter: -229,
+      yCenter: -233,
     },
     {
       title: "Stack",
-      desc: "Automatic variables,\nreturn address, etc.\n(grows towards lower addresses)",
-      h: 100,
+      desc: "Function frames, return address\n(grows towards lower addresses)",
+      h: 75,
       fill: "#1B3A1B",
       stroke: "#4CAF50",
-      yCenter: -131,
+      yCenter: -150,
     },
     {
       title: "Heap",
-      desc: "Dynamic memory allocation\nmalloc / new / free / delete\n(grows towards higher addresses)",
-      h: 90,
+      desc: "Dynamic memory allocation\nmalloc / free\n(grows towards higher addresses)",
+      h: 82,
       fill: "#3A2A00",
       stroke: "#FFB300",
-      yCenter: 20,
+      yCenter: 65,
     },
     {
       title: "BSS",
       desc: "Uninitialized static variables\nfilled with zeros",
-      h: 60,
+      h: 75,
       fill: "#3A2200",
       stroke: "#FF9800",
-      yCenter: 103,
+      yCenter: 152,
     },
     {
       title: "Data",
       desc: "Static variables\nexplicitly initialized",
-      h: 60,
+      h: 75,
       fill: "#2A1A3A",
       stroke: "#CE93D8",
-      yCenter: 171,
+      yCenter: 235,
     },
     {
       title: "Text",
-      desc: "Binary image of the process\n(e.g., /bin/ls)",
-      h: 60,
+      desc: "Binary image of the process",
+      h: 55,
       fill: "#1A1A3A",
       stroke: "#7E57C2",
-      yCenter: 239,
+      yCenter: 308,
     },
   ];
 
@@ -615,7 +769,13 @@ export default makeScene2D(function* (view) {
         opacity={0}
       >
         <Txt text={sec.title} fontSize={20} fill={"#ffffff"} fontWeight={700} />
-        <Txt text={sec.desc} fontSize={12} fill={"#cccccc"} fontFamily={"monospace"} textAlign={"center"} />
+        <Txt
+          text={sec.desc}
+          fontSize={12}
+          fill={"#cccccc"}
+          fontFamily={"monospace"}
+          textAlign={"center"}
+        />
       </Rect>,
     );
   });
@@ -624,7 +784,7 @@ export default makeScene2D(function* (view) {
   view.add(
     <Txt
       ref={memAddrTop}
-      text="0xFFFFFFFF"
+      text="0xFFFFFFFFFFFFFFFF"
       fontSize={16}
       fill={DIM_GRAY}
       fontFamily={"monospace"}
@@ -638,13 +798,13 @@ export default makeScene2D(function* (view) {
   view.add(
     <Txt
       ref={memAddrBottom}
-      text="0x00000000"
+      text="0x0000000000000000"
       fontSize={16}
       fill={DIM_GRAY}
       fontFamily={"monospace"}
       fontWeight={600}
       x={memAddrX}
-      y={275}
+      y={340}
       opacity={0}
     />,
   );
@@ -654,20 +814,20 @@ export default makeScene2D(function* (view) {
     <Rect
       ref={memGapLine}
       width={memWidth}
-      height={40}
+      height={120}
       fill={"#00000000"}
       stroke={DIM_GRAY}
       lineWidth={2}
       lineDash={[8, 6]}
       radius={6}
       x={memColX}
-      y={-53}
+      y={-44}
       opacity={0}
     />,
   );
 
   // Frecce Stack (verso il basso ↓) - ai lati del box
-  const stackSecY = -131;
+  const stackSecY = -150;
   const arrowOffsetX = memWidth / 2 + 20;
   view.add(
     <Line
@@ -699,13 +859,13 @@ export default makeScene2D(function* (view) {
   );
 
   // Frecce Heap (verso l'alto ↑) - ai lati del box
-  const heapSecY = 20;
+  const heapSecY = 65;
   view.add(
     <Line
       ref={heapArrow1}
       points={[
-        [memColX - arrowOffsetX, heapSecY + 25],
-        [memColX - arrowOffsetX, heapSecY - 30],
+        [memColX - arrowOffsetX, heapSecY + 20],
+        [memColX - arrowOffsetX, heapSecY - 40],
       ]}
       stroke={"#FFB300"}
       lineWidth={3}
@@ -718,8 +878,8 @@ export default makeScene2D(function* (view) {
     <Line
       ref={heapArrow2}
       points={[
-        [memColX + arrowOffsetX, heapSecY + 25],
-        [memColX + arrowOffsetX, heapSecY - 30],
+        [memColX + arrowOffsetX, heapSecY + 20],
+        [memColX + arrowOffsetX, heapSecY - 40],
       ]}
       stroke={"#FFB300"}
       lineWidth={3}
@@ -806,7 +966,10 @@ export default makeScene2D(function* (view) {
     yield* all(
       stackCellValues[cellIndex].text(value, 0.3),
       stackCellValues[cellIndex].opacity(1, 0.3),
-      stackCellValues[cellIndex].fill(strokeColor === RED ? RED : "#ffffff", 0.3),
+      stackCellValues[cellIndex].fill(
+        strokeColor === RED ? RED : "#ffffff",
+        0.3,
+      ),
       stackCellLabels[cellIndex].text(label, 0.3),
       stackCellLabels[cellIndex].opacity(1, 0.3),
       stackCellLabels[cellIndex].fill(strokeColor === RED ? RED : GREEN, 0.3),
@@ -846,19 +1009,6 @@ export default makeScene2D(function* (view) {
     yield* cCodeLines[i].opacity(1, 0.15);
   }
 
-  yield* beginSlide("BO: Flow Highlight");
-
-  // Evidenzia flusso: main() -> ask_name() -> gets() -> return
-  yield* highlightCLine(16); // ask_name();
-  yield* waitFor(0.5);
-  yield* highlightCLine(9); // gets(name);
-  yield* waitFor(0.5);
-  yield* highlightCLine(8); // char name[16];
-  yield* waitFor(0.3);
-  yield* highlightCLine(17); // return 0;
-  yield* waitFor(0.3);
-  yield* codeHighlight().opacity(0, 0.3);
-
   yield* beginSlide("BO: Stack Setup");
 
   // ==========================================
@@ -869,10 +1019,7 @@ export default makeScene2D(function* (view) {
   yield* stackTitle().opacity(1, 0.5);
   yield* all(
     ...stackAddresses.map((_, i) =>
-      all(
-        stackCells[i].opacity(1, 0.3),
-        stackAddressLabels[i].opacity(1, 0.3),
-      ),
+      all(stackCells[i].opacity(1, 0.3), stackAddressLabels[i].opacity(1, 0.3)),
     ),
   );
 
@@ -885,16 +1032,27 @@ export default makeScene2D(function* (view) {
     );
   }
 
-  // RSP e main() frame
+  // RSP e main() frame (già presente, senza highlight)
   yield* all(rspArrow().opacity(1, 0.4), rspLabel().opacity(1, 0.4));
-  yield* moveRSP(1);
   yield* showStackCell(0, "...", "main()");
-  yield* showStackCell(1, "main+1", "return addr");
 
   yield* beginSlide("BO: call ask_name");
 
-  // call ask_name()
-  yield* highlightCLine(16);
+  // Evidenzia ask_name() - appare direttamente senza slide
+  codeHighlight().y(cCodeStartY + 16 * cLineSpacing);
+  yield* codeHighlight().opacity(1, 0.3);
+
+  yield* beginSlide("BO: enter ask_name");
+
+  // Entriamo nella funzione: evidenzia { di ask_name
+  yield* highlightCLine(7);
+
+  // call: RSP scende, poi appare return address
+  yield* all(updateRegValue(0, "0x7FE8"), highlightReg(0));
+  yield* moveRSP(1);
+  yield* showStackCell(1, "main+1", "return addr");
+
+  yield* beginSlide("BO: push rbp");
 
   // push rbp
   yield* all(updateRegValue(0, "0x7FE0"), highlightReg(0));
@@ -907,17 +1065,18 @@ export default makeScene2D(function* (view) {
 
   yield* beginSlide("BO: char name[16]");
 
-  // char name[16] -> sub rsp
+  // char name[16] -> sub rsp, 16
   yield* highlightCLine(8);
-  yield* all(updateRegValue(0, "0x7FC0"), highlightReg(0));
-  yield* moveRSP(6);
+  yield* all(updateRegValue(0, "0x7FD0"), highlightReg(0));
+  yield* moveRSP(4);
 
   yield* beginSlide("BO: gets Alice");
 
   // gets(name) - input "Alice"
   yield* highlightCLine(9);
-  yield* all(updateRegValue(2, "0x7FC8"), highlightReg(2));
-  yield* showStackCell(5, "Alice\\0", "name[0..7]");
+  yield* all(updateRegValue(2, "0x7FD0"), highlightReg(2));
+  yield* showStackCell(4, "Alice\\0", "name[0..7]");
+  yield* showStackCell(3, "", "name[8..15]");
 
   yield* beginSlide("BO: printf Alice");
 
@@ -940,16 +1099,16 @@ export default makeScene2D(function* (view) {
   yield* moveRSP(0);
 
   // Celle deallocate
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 4; i++) {
     yield* all(
       stackCells[i].fill("#1a1a1a", 0.2),
       stackCellValues[i].fill(DIM_GRAY, 0.2),
     );
   }
 
-  yield* codeHighlight().fill("#2d4a2d80", 0.3);
-  yield* outputText().text("> Hello, Alice!  returned to main+1", 0.3);
-  yield* outputText().fill(TEAL, 0.3);
+  // Fade out output e highlight return 0 di main
+  yield* outputText().opacity(0, 0.3);
+  yield* highlightCLine(17);
 
   yield* beginSlide("BO: Attack Setup");
 
@@ -972,19 +1131,17 @@ export default makeScene2D(function* (view) {
     updateRegValue(5, "?"),
   );
 
-  // Titolo
-  yield* phaseTitle().text("Buffer Overflow Attack", 0);
-  yield* phaseTitle().fill(RED, 0);
-  yield* phaseTitle().opacity(1, 0.5);
-  yield* waitFor(1.0);
-  yield* phaseTitle().opacity(0, 0.4);
-
   // Ri-setup stack veloce (senza canary)
-  yield* moveRSP(1);
   yield* showStackCell(0, "...", "main()");
+
+  codeHighlight().y(cCodeStartY + 16 * cLineSpacing);
+  yield* codeHighlight().opacity(1, 0.3); // ask_name()
+  yield* highlightCLine(7); // { di ask_name
+
+  yield* all(updateRegValue(0, "0x7FE8"), highlightReg(0));
+  yield* moveRSP(1);
   yield* showStackCell(1, "main+1", "return addr");
 
-  yield* highlightCLine(16);
   yield* all(updateRegValue(0, "0x7FE0"), highlightReg(0));
   yield* moveRSP(2);
   yield* showStackCell(2, "0x7FF0", "saved RBP");
@@ -992,25 +1149,19 @@ export default makeScene2D(function* (view) {
   yield* moveRBP(2);
 
   yield* highlightCLine(8);
-  yield* all(updateRegValue(0, "0x7FC0"), highlightReg(0));
-  yield* moveRSP(6);
+  yield* all(updateRegValue(0, "0x7FD0"), highlightReg(0));
+  yield* moveRSP(4);
 
   yield* beginSlide("BO: Overflow Input");
 
   // gets() con OVERFLOW (senza canary)
   yield* highlightCLine(9);
-  yield* all(updateRegValue(2, "0x7FC8"), highlightReg(2));
+  yield* all(updateRegValue(2, "0x7FD0"), highlightReg(2));
 
-  // Buffer
-  yield* overflowCell(5, "AAAAAAAA", "name[0..7]", YELLOW);
+  // Buffer (2 celle: 4 e 3)
+  yield* overflowCell(4, "AAAAAAAA", "name[0..7]", YELLOW);
   yield* waitFor(0.3);
-  yield* overflowCell(4, "AAAAAAAA", "name[8..15]", YELLOW);
-  yield* waitFor(0.3);
-
-  yield* beginSlide("BO: Overflow padding");
-
-  // Padding (cella 3)
-  yield* overflowCell(3, "AAAAAAAA", "padding", YELLOW);
+  yield* overflowCell(3, "AAAAAAAA", "name[8..15]", YELLOW);
   yield* waitFor(0.3);
 
   yield* beginSlide("BO: Overflow RBP");
@@ -1022,7 +1173,7 @@ export default makeScene2D(function* (view) {
   yield* beginSlide("BO: Overflow Return Addr");
 
   // Return address -> &win()
-  yield* overflowCell(1, "&win()", "ret addr -> win()!", PURPLE);
+  yield* overflowCell(1, "win+0", "ret addr -> win()!", PURPLE);
 
   yield* beginSlide("BO: printf overflow");
 
@@ -1044,22 +1195,19 @@ export default makeScene2D(function* (view) {
     stackCells[1].stroke("#ffffff", 0.2),
     stackCells[1].scale(1.1, 0.2),
   );
-  yield* all(
-    stackCells[1].stroke(PURPLE, 0.3),
-    stackCells[1].scale(1, 0.3),
-  );
+  yield* all(stackCells[1].stroke(PURPLE, 0.3), stackCells[1].scale(1, 0.3));
 
-  // HIJACKED! -> esegue win()
+  // Esegue win()
   yield* highlightCLine(0);
   yield* codeHighlight().fill("#f4474780", 0.3);
 
-  yield* phaseTitle().text("Control Flow Hijacked!", 0);
-  yield* phaseTitle().fill(RED, 0);
-  yield* phaseSubtitle().text("return jumps to win() instead of main+1", 0);
-  yield* all(
-    phaseTitle().opacity(1, 0.5),
-    phaseSubtitle().opacity(1, 0.4),
-  );
+  // Inscurisci celle stack (deallocate)
+  for (let i = 1; i <= 4; i++) {
+    yield* all(
+      stackCells[i].fill("#1a1a1a", 0.2),
+      stackCellValues[i].fill(DIM_GRAY, 0.2),
+    );
+  }
 
   yield* beginSlide("BO: Canary Intro");
 
@@ -1068,18 +1216,9 @@ export default makeScene2D(function* (view) {
   // ==========================================
 
   yield* all(
-    phaseTitle().opacity(0, 0.4),
-    phaseSubtitle().opacity(0, 0.4),
     codeHighlight().opacity(0, 0.3),
     codeHighlight().fill("#264f7880", 0),
   );
-
-  // Titolo
-  yield* phaseTitle().text("Stack Canary Protection", 0);
-  yield* phaseTitle().fill(TEAL, 0);
-  yield* phaseTitle().opacity(1, 0.5);
-  yield* waitFor(1.0);
-  yield* phaseTitle().opacity(0, 0.4);
 
   // Reset stack
   yield* resetStackCells();
@@ -1091,35 +1230,30 @@ export default makeScene2D(function* (view) {
   );
   yield* all(rbpArrow().opacity(0, 0.1), rbpLabel().opacity(0, 0.1));
 
-  // Fade in R8 (registro 6)
-  yield* all(
-    regBoxes[6].opacity(1, 0.5),
-    regLabels[6].opacity(1, 0.5),
-    regValues[6].opacity(1, 0.5),
-  );
-  yield* highlightReg(6);
-
   // Ri-setup stack CON canary
-  yield* moveRSP(1);
   yield* showStackCell(0, "...", "main()");
+
+  codeHighlight().y(cCodeStartY + 16 * cLineSpacing);
+  yield* codeHighlight().opacity(1, 0.3); // ask_name()
+  yield* highlightCLine(7); // { di ask_name
+
+  yield* all(updateRegValue(0, "0x7FE8"), highlightReg(0));
+  yield* moveRSP(1);
   yield* showStackCell(1, "main+1", "return addr");
 
-  yield* highlightCLine(16);
   yield* all(updateRegValue(0, "0x7FE0"), highlightReg(0));
   yield* moveRSP(2);
   yield* showStackCell(2, "0x7FF0", "saved RBP");
   yield* all(updateRegValue(1, "0x7FE0"), highlightReg(1));
   yield* moveRBP(2);
 
-  yield* highlightCLine(8);
-  yield* all(updateRegValue(0, "0x7FC0"), highlightReg(0));
-  yield* moveRSP(6);
-
-  // Store canary
-  yield* codeHighlight().opacity(0, 0.2);
-  yield* highlightReg(6);
-  yield* showStackCell(3, "0xDEAD", "CANARY");
+  // Store canary (mentre evidenziatore è sulla {)
+  yield* showStackCell(3, "0xDEAD", "canary");
   yield* stackCells[3].stroke(GOLD, 0.3);
+
+  yield* highlightCLine(8);
+  yield* all(updateRegValue(0, "0x7FC8"), highlightReg(0));
+  yield* moveRSP(5);
 
   yield* beginSlide("BO: Canary Overflow Input");
 
@@ -1152,7 +1286,7 @@ export default makeScene2D(function* (view) {
   yield* beginSlide("BO: Canary Overflow Ret");
 
   // Return address -> &win()
-  yield* overflowCell(1, "&win()", "ret addr -> win()!", PURPLE);
+  yield* overflowCell(1, "win+0", "ret addr -> win()!", PURPLE);
 
   yield* beginSlide("BO: Canary Check");
 
@@ -1163,41 +1297,20 @@ export default makeScene2D(function* (view) {
   yield* all(updateRegValue(5, "AAAAAAAA"), highlightReg(5));
 
   // MISMATCH: RAX = AAAAAAAA vs R8 = 0xDEAD
-  yield* all(
-    regBoxes[5].stroke(RED, 0.3),
-    regBoxes[6].stroke(RED, 0.3),
-    stackCells[3].stroke(RED, 0.3),
-  );
+  yield* all(regBoxes[5].stroke(RED, 0.3), stackCells[3].stroke(RED, 0.3));
 
-  yield* all(
-    regBoxes[5].scale(1.15, 0.2),
-    regBoxes[6].scale(1.15, 0.2),
-  );
-  yield* all(
-    regBoxes[5].scale(1, 0.3),
-    regBoxes[6].scale(1, 0.3),
-  );
+  yield* regBoxes[5].scale(1.15, 0.2);
+  yield* regBoxes[5].scale(1, 0.3);
 
   yield* beginSlide("BO: stack_chk_fail");
 
   // Canary check FAILED
   yield* codeHighlight().fill("#f4474780", 0.3);
 
-  // Flash rosso
-  yield* crashBg().opacity(0.3, 0.15);
-  yield* crashBg().opacity(0, 0.15);
-  yield* crashBg().opacity(0.2, 0.1);
-  yield* crashBg().opacity(0, 0.1);
-
-  // Messaggio errore
-  yield* phaseTitle().text("*** stack smashing detected ***", 0);
-  yield* phaseTitle().fill(RED, 0);
-  yield* phaseTitle().fontSize(40, 0);
-  yield* phaseSubtitle().text("Program aborted - attack prevented", 0);
-  yield* all(
-    phaseTitle().opacity(1, 0.5),
-    phaseSubtitle().opacity(1, 0.4),
-  );
+  // Messaggio errore sotto il codice C
+  yield* outputText().text("*** stack smashing detected ***", 0);
+  yield* outputText().fill(RED, 0);
+  yield* outputText().opacity(1, 0.4);
 
   yield* beginSlide("BO: Lesson");
 
@@ -1207,8 +1320,7 @@ export default makeScene2D(function* (view) {
 
   // Fade out tutto
   yield* all(
-    phaseTitle().opacity(0, 0.4),
-    phaseSubtitle().opacity(0, 0.4),
+    outputText().opacity(0, 0.3),
     codeHighlight().opacity(0, 0.3),
     codeBox().opacity(0, 0.3),
     codeBoxTitle().opacity(0, 0.3),
@@ -1231,31 +1343,12 @@ export default makeScene2D(function* (view) {
     ...regValues.map((value) => value.opacity(0, 0.3)),
   );
 
-  // Lezione finale
-  yield* phaseTitle().text("Stack Canary Protection", 0);
-  yield* phaseTitle().fill(YELLOW, 0);
-  yield* phaseTitle().fontSize(52, 0);
-  yield* phaseTitle().y(-30, 0);
-  yield* phaseSubtitle().text(
-    "The canary detects buffer overflow before ret executes",
-    0,
-  );
-  yield* phaseSubtitle().y(30, 0);
-
-  yield* phaseTitle().opacity(1, 0.5);
-  yield* phaseSubtitle().opacity(1, 0.5);
-
-  yield* beginSlide("BO: End");
-
   // ==========================================
   // MEMORY LAYOUT DIAGRAM
   // ==========================================
 
   // Fade out lezione finale
-  yield* all(
-    phaseTitle().opacity(0, 0.4),
-    phaseSubtitle().opacity(0, 0.4),
-  );
+  yield* all(phaseTitle().opacity(0, 0.4), phaseSubtitle().opacity(0, 0.4));
 
   // Fade in tutto il memory layout in una singola slide
   yield* all(
