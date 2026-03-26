@@ -23,13 +23,6 @@ export default makeScene2D(function* (view) {
   const codeBoxWidth = 480;
   const codeBoxHeight = 500;
 
-  // Registers (in basso)
-  const regY = 330;
-  const regBoxWidth = 95;
-  const regBoxHeight = 70;
-  const regStartX = -315;
-  const regSpacing = 105;
-
   // Colori (identici a stack.tsx)
   const TEAL = "#4ec9b0";
   const ORANGE = "#ce9178";
@@ -77,11 +70,6 @@ export default makeScene2D(function* (view) {
 
   // C code lines
   const cCodeLines = createRefArray<Txt>();
-
-  // Registers
-  const regBoxes = createRefArray<Rect>();
-  const regLabels = createRefArray<Txt>();
-  const regValues = createRefArray<Txt>();
 
   // Overlay effects
   const phaseTitle = createRef<Txt>();
@@ -594,59 +582,6 @@ export default makeScene2D(function* (view) {
     />,
   );
 
-  // ============ REGISTERS ============
-
-  const registers = ["RSP", "RBP", "RDI", "RSI", "RDX", "RAX", "R8"];
-  const regInitialValues = ["0x7FE8", "0x7FF0", "?", "?", "?", "?", "0xDEAD"];
-  const regColors = [TEAL, ORANGE, YELLOW, YELLOW, YELLOW, PURPLE, GOLD];
-
-  registers.forEach((reg, i) => {
-    const x = regStartX + i * regSpacing;
-
-    view.add(
-      <Rect
-        ref={regBoxes}
-        width={regBoxWidth}
-        height={regBoxHeight}
-        fill={"#2d2d30"}
-        stroke={regColors[i]}
-        lineWidth={3}
-        radius={8}
-        x={x}
-        y={regY}
-        opacity={0}
-      />,
-    );
-
-    view.add(
-      <Txt
-        ref={regLabels}
-        text={reg}
-        fontSize={18}
-        fill={regColors[i]}
-        fontWeight={700}
-        fontFamily={"monospace"}
-        x={x}
-        y={regY - 18}
-        opacity={0}
-      />,
-    );
-
-    view.add(
-      <Txt
-        ref={regValues}
-        text={regInitialValues[i]}
-        fontSize={17}
-        fill={"#ffffff"}
-        fontWeight={600}
-        fontFamily={"monospace"}
-        x={x}
-        y={regY + 12}
-        opacity={0}
-      />,
-    );
-  });
-
   // ============ OVERLAY ELEMENTS ============
 
   view.add(
@@ -896,10 +831,6 @@ export default makeScene2D(function* (view) {
     yield* all(codeHighlight().opacity(1, 0.2), codeHighlight().y(y, 0.3));
   };
 
-  const updateRegValue = function* (regIndex: number, newValue: string) {
-    yield* regValues[regIndex].text(newValue, 0.3);
-  };
-
   const showStackCell = function* (
     cellIndex: number,
     value: string,
@@ -910,19 +841,6 @@ export default makeScene2D(function* (view) {
       stackCellValues[cellIndex].opacity(1, 0.3),
       stackCellLabels[cellIndex].text(label, 0.3),
       stackCellLabels[cellIndex].opacity(1, 0.3),
-    );
-  };
-
-  const highlightReg = function* (regIndex: number) {
-    yield* all(
-      regBoxes[regIndex].stroke("#ffffff", 0.2),
-      regBoxes[regIndex].lineWidth(6, 0.2),
-      regBoxes[regIndex].scale(1.12, 0.2),
-    );
-    yield* all(
-      regBoxes[regIndex].stroke(regColors[regIndex], 0.4),
-      regBoxes[regIndex].lineWidth(3, 0.4),
-      regBoxes[regIndex].scale(1, 0.4),
     );
   };
 
@@ -1026,9 +944,6 @@ export default makeScene2D(function* (view) {
   // Mostra registri (solo 6, senza R8)
   for (let i = 0; i < 6; i++) {
     yield* all(
-      regBoxes[i].opacity(1, 0.3 + i * 0.08),
-      regLabels[i].opacity(1, 0.3 + i * 0.08),
-      regValues[i].opacity(1, 0.3 + i * 0.08),
     );
   }
 
@@ -1044,58 +959,52 @@ export default makeScene2D(function* (view) {
 
   yield* beginSlide("BO: enter ask_name");
 
-  // Entriamo nella funzione: evidenzia { di ask_name
-  yield* highlightCLine(7);
-
   // call: RSP scende, poi appare return address
-  yield* all(updateRegValue(0, "0x7FE8"), highlightReg(0));
   yield* moveRSP(1);
   yield* showStackCell(1, "main+1", "return addr");
+
+  // Evidenzia { di ask_name
+  yield* highlightCLine(7);
 
   yield* beginSlide("BO: push rbp");
 
   // push rbp
-  yield* all(updateRegValue(0, "0x7FE0"), highlightReg(0));
   yield* moveRSP(2);
   yield* showStackCell(2, "0x7FF0", "saved RBP");
 
   // mov rbp, rsp
-  yield* all(updateRegValue(1, "0x7FE0"), highlightReg(1));
   yield* moveRBP(2);
-
-  yield* beginSlide("BO: char name[16]");
 
   // char name[16] -> sub rsp, 16
   yield* highlightCLine(8);
-  yield* all(updateRegValue(0, "0x7FD0"), highlightReg(0));
+
+  yield* beginSlide("BO: char name[16]");
+
   yield* moveRSP(4);
+  yield* highlightCLine(9);
 
   yield* beginSlide("BO: gets Alice");
 
   // gets(name) - input "Alice"
-  yield* highlightCLine(9);
-  yield* all(updateRegValue(2, "0x7FD0"), highlightReg(2));
   yield* showStackCell(4, "Alice\\0", "name[0..7]");
   yield* showStackCell(3, "", "name[8..15]");
 
-  yield* beginSlide("BO: printf Alice");
-
   // printf
   yield* highlightCLine(10);
+
+  yield* beginSlide("BO: printf Alice");
+
   yield* outputText().text("> Hello, Alice!", 0);
   yield* outputText().opacity(1, 0.4);
 
-  yield* beginSlide("BO: Clean Return");
-
-  // return; -> return pulito
+  // return;
   yield* highlightCLine(11);
 
+  yield* beginSlide("BO: return");
+
   // leave + ret
-  yield* all(updateRegValue(0, "0x7FE0"), highlightReg(0));
   yield* moveRSP(2);
-  yield* all(updateRegValue(1, "0x7FF0"), highlightReg(1));
   yield* all(rbpArrow().opacity(0, 0.3), rbpLabel().opacity(0, 0.3));
-  yield* all(updateRegValue(0, "0x7FF0"), highlightReg(0));
   yield* moveRSP(0);
 
   // Celle deallocate
@@ -1124,39 +1033,25 @@ export default makeScene2D(function* (view) {
     outputText().fill(GREEN, 0),
   );
   yield* resetStackCells();
-  yield* all(
-    updateRegValue(0, "0x7FE8"),
-    updateRegValue(1, "0x7FF0"),
-    updateRegValue(2, "?"),
-    updateRegValue(5, "?"),
-  );
 
   // Ri-setup stack veloce (senza canary)
   yield* showStackCell(0, "...", "main()");
 
   codeHighlight().y(cCodeStartY + 16 * cLineSpacing);
   yield* codeHighlight().opacity(1, 0.3); // ask_name()
-  yield* highlightCLine(7); // { di ask_name
 
-  yield* all(updateRegValue(0, "0x7FE8"), highlightReg(0));
   yield* moveRSP(1);
   yield* showStackCell(1, "main+1", "return addr");
+  yield* highlightCLine(7); // { di ask_name
 
-  yield* all(updateRegValue(0, "0x7FE0"), highlightReg(0));
   yield* moveRSP(2);
   yield* showStackCell(2, "0x7FF0", "saved RBP");
-  yield* all(updateRegValue(1, "0x7FE0"), highlightReg(1));
   yield* moveRBP(2);
 
-  yield* highlightCLine(8);
-  yield* all(updateRegValue(0, "0x7FD0"), highlightReg(0));
   yield* moveRSP(4);
+  yield* highlightCLine(9);
 
   yield* beginSlide("BO: Overflow Input");
-
-  // gets() con OVERFLOW (senza canary)
-  yield* highlightCLine(9);
-  yield* all(updateRegValue(2, "0x7FD0"), highlightReg(2));
 
   // Buffer (2 celle: 4 e 3)
   yield* overflowCell(4, "AAAAAAAA", "name[0..7]", YELLOW);
@@ -1177,11 +1072,11 @@ export default makeScene2D(function* (view) {
 
   yield* beginSlide("BO: printf overflow");
 
-  // printf
-  yield* highlightCLine(10);
+  // printf - azione prima, poi evidenziatore
   yield* outputText().text("> Hello, AAAAAAAAAAAAAAAA...!", 0);
   yield* outputText().fill(YELLOW, 0);
   yield* outputText().opacity(1, 0.4);
+  yield* highlightCLine(10);
 
   yield* beginSlide("BO: Hijacked Return");
 
@@ -1222,12 +1117,6 @@ export default makeScene2D(function* (view) {
 
   // Reset stack
   yield* resetStackCells();
-  yield* all(
-    updateRegValue(0, "0x7FE8"),
-    updateRegValue(1, "0x7FF0"),
-    updateRegValue(2, "?"),
-    updateRegValue(5, "?"),
-  );
   yield* all(rbpArrow().opacity(0, 0.1), rbpLabel().opacity(0, 0.1));
 
   // Ri-setup stack CON canary
@@ -1235,35 +1124,27 @@ export default makeScene2D(function* (view) {
 
   codeHighlight().y(cCodeStartY + 16 * cLineSpacing);
   yield* codeHighlight().opacity(1, 0.3); // ask_name()
-  yield* highlightCLine(7); // { di ask_name
 
-  yield* all(updateRegValue(0, "0x7FE8"), highlightReg(0));
   yield* moveRSP(1);
   yield* showStackCell(1, "main+1", "return addr");
+  yield* highlightCLine(7); // { di ask_name
 
-  yield* all(updateRegValue(0, "0x7FE0"), highlightReg(0));
   yield* moveRSP(2);
   yield* showStackCell(2, "0x7FF0", "saved RBP");
-  yield* all(updateRegValue(1, "0x7FE0"), highlightReg(1));
   yield* moveRBP(2);
 
-  // Store canary (mentre evidenziatore è sulla {)
+  // Store canary
   yield* showStackCell(3, "0xDEAD", "canary");
   yield* stackCells[3].stroke(GOLD, 0.3);
 
-  yield* highlightCLine(8);
-  yield* all(updateRegValue(0, "0x7FC8"), highlightReg(0));
   yield* moveRSP(5);
+  yield* highlightCLine(9);
 
   yield* beginSlide("BO: Canary Overflow Input");
 
   // ==========================================
   // FASE 5: Overflow CON canary (attacco bloccato)
   // ==========================================
-
-  // gets() overflow
-  yield* highlightCLine(9);
-  yield* all(updateRegValue(2, "0x7FC8"), highlightReg(2));
 
   // Buffer
   yield* overflowCell(5, "AAAAAAAA", "name[0..7]", YELLOW);
@@ -1294,13 +1175,9 @@ export default makeScene2D(function* (view) {
   yield* highlightCLine(11);
 
   // Load corrupted canary -> RAX
-  yield* all(updateRegValue(5, "AAAAAAAA"), highlightReg(5));
 
   // MISMATCH: RAX = AAAAAAAA vs R8 = 0xDEAD
-  yield* all(regBoxes[5].stroke(RED, 0.3), stackCells[3].stroke(RED, 0.3));
 
-  yield* regBoxes[5].scale(1.15, 0.2);
-  yield* regBoxes[5].scale(1, 0.3);
 
   yield* beginSlide("BO: stack_chk_fail");
 
@@ -1338,9 +1215,6 @@ export default makeScene2D(function* (view) {
     rspLabel().opacity(0, 0.3),
     rbpArrow().opacity(0, 0.3),
     rbpLabel().opacity(0, 0.3),
-    ...regBoxes.map((box) => box.opacity(0, 0.3)),
-    ...regLabels.map((label) => label.opacity(0, 0.3)),
-    ...regValues.map((value) => value.opacity(0, 0.3)),
   );
 
   // ==========================================
