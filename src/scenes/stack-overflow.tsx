@@ -1144,16 +1144,165 @@ export default makeScene2D(function* (view) {
   yield* highlightCLine(0);
   yield* codeHighlight().fill("#f4474780", 0.3);
 
-  yield* beginSlide("BO: Canary Intro");
+  yield* beginSlide("SC: Shellcode Intro");
 
   // ==========================================
-  // FASE 4: Introduzione Canary
+  // FASE 3b: Shellcode Injection (senza win)
   // ==========================================
 
   yield* all(
     codeHighlight().opacity(0, 0.3),
     codeHighlight().fill("#264f7880", 0),
   );
+
+  // Reset stack
+  yield* resetStackCells();
+  yield* moveRSP(0);
+  yield* all(rbpArrow().opacity(0, 0.1), rbpLabel().opacity(0, 0.1));
+
+  // Nascondi win() nel codice C (righe 0-4)
+  yield* all(
+    cCodeLines[0].opacity(0, 0.3),
+    cCodeLines[1].opacity(0, 0.3),
+    cCodeLines[2].opacity(0, 0.3),
+    cCodeLines[3].opacity(0, 0.3),
+    cCodeLines[4].opacity(0, 0.3),
+  );
+
+  // Ri-setup stack (senza canary)
+  yield* showStackCell(0, "...", "main()");
+
+  yield* beginSlide("SC: call ask_name");
+
+  codeHighlight().y(cCodeStartY + 16 * cLineSpacing);
+  yield* codeHighlight().opacity(1, 0.3); // ask_name()
+
+  yield* beginSlide("SC: enter ask_name");
+
+  yield* moveRSP(1);
+  yield* showStackCell(1, "main+1", "return addr");
+  yield* highlightCLine(7); // { di ask_name
+
+  yield* beginSlide("SC: push rbp");
+
+  yield* moveRSP(2);
+  yield* showStackCell(2, "0x7FF0", "saved RBP");
+  yield* moveRBP(2);
+  yield* highlightCLine(8);
+
+  yield* beginSlide("SC: char name[16]");
+
+  yield* moveRSP(4);
+  yield* highlightCLine(9);
+
+  yield* beginSlide("SC: Shellcode Overflow");
+
+  // Overflow con shellcode (tutti e 3 insieme)
+  yield* overflowCell(4, "push /bin/sh", "shellcode", YELLOW);
+  yield* waitFor(0.3);
+  yield* overflowCell(3, "mov rdi, rsp", "shellcode", YELLOW);
+  yield* waitFor(0.3);
+  yield* overflowCell(2, "call execve", "shellcode", YELLOW);
+  yield* waitFor(0.3);
+
+  yield* beginSlide("SC: Shellcode Ret");
+
+  // Return address -> $RSP (punta allo stack!)
+  yield* overflowCell(1, "$RSP", "ret addr -> stack!", PURPLE);
+
+  yield* beginSlide("SC: printf");
+
+  // printf
+  yield* highlightCLine(10);
+
+  yield* beginSlide("SC: printf output");
+
+  yield* outputText().text("> Hello, shellcode...!", 0);
+  yield* outputText().fill(YELLOW, 0);
+  yield* outputText().opacity(1, 0.4);
+  yield* highlightCLine(11);
+
+  yield* beginSlide("SC: return");
+
+  // return; - fade output, flash return addr, inscurisci celle
+  yield* outputText().opacity(0, 0.3);
+
+  yield* all(
+    stackCells[1].stroke("#ffffff", 0.2),
+    stackCells[1].scale(1.1, 0.2),
+  );
+  yield* all(stackCells[1].stroke(PURPLE, 0.3), stackCells[1].scale(1, 0.3));
+
+  // Inscurisci celle stack
+  for (let i = 1; i <= 4; i++) {
+    yield* all(
+      stackCells[i].fill("#1a1a1a", 0.2),
+      stackCellValues[i].fill(DIM_GRAY, 0.2),
+    );
+  }
+
+  // Fade out code highlight
+  yield* codeHighlight().opacity(0, 0.3);
+
+  // Evidenziatore ROSSO sulla cella 4 (0x7FD0) - esecuzione shellcode
+  yield* all(
+    stackCells[4].fill("#3a1a1a", 0.3),
+    stackCells[4].stroke(RED, 0.3),
+    stackCellValues[4].fill("#ffffff", 0.3),
+  );
+
+  yield* beginSlide("SC: exec cell 3");
+
+  // Evidenziatore sale a cella 3 (cella 4 torna normale)
+  yield* all(
+    stackCells[4].fill("#2d2d30", 0.2),
+    stackCells[4].stroke(YELLOW, 0.2),
+  );
+  yield* all(
+    stackCells[3].fill("#3a1a1a", 0.3),
+    stackCells[3].stroke(RED, 0.3),
+    stackCellValues[3].fill("#ffffff", 0.3),
+  );
+
+  yield* beginSlide("SC: exec cell 2");
+
+  // Evidenziatore sale a cella 2 (cella 3 torna normale)
+  yield* all(
+    stackCells[3].fill("#2d2d30", 0.2),
+    stackCells[3].stroke(YELLOW, 0.2),
+  );
+  yield* all(
+    stackCells[2].fill("#3a1a1a", 0.3),
+    stackCells[2].stroke(RED, 0.3),
+    stackCellValues[2].fill("#ffffff", 0.3),
+  );
+
+  yield* beginSlide("SC: shell");
+
+  // Prompt bash sotto il codice C
+  yield* outputText().text("$ /bin/sh", 0);
+  yield* outputText().fill(TEAL, 0);
+  yield* outputText().opacity(1, 0.4);
+
+  yield* beginSlide("SC: Canary Intro");
+
+  // Cleanup: ripristina win(), nascondi output e resetta
+  yield* all(
+    stackCells[2].fill("#1a1a1a", 0.2),
+    stackCells[2].stroke(DIM_GRAY, 0.2),
+    outputText().opacity(0, 0.3),
+  );
+  yield* all(
+    cCodeLines[0].opacity(1, 0.3),
+    cCodeLines[1].opacity(1, 0.3),
+    cCodeLines[2].opacity(1, 0.3),
+    cCodeLines[3].opacity(1, 0.3),
+    cCodeLines[4].opacity(1, 0.3),
+  );
+
+  // ==========================================
+  // FASE 4: Introduzione Canary
+  // ==========================================
 
   // Reset stack
   yield* resetStackCells();
