@@ -943,8 +943,7 @@ export default makeScene2D(function* (view) {
 
   // Mostra registri (solo 6, senza R8)
   for (let i = 0; i < 6; i++) {
-    yield* all(
-    );
+    yield* all();
   }
 
   // RSP e main() frame (già presente, senza highlight)
@@ -1033,20 +1032,30 @@ export default makeScene2D(function* (view) {
     outputText().fill(GREEN, 0),
   );
   yield* resetStackCells();
+  yield* moveRSP(0);
 
-  // Ri-setup stack veloce (senza canary)
+  // Ri-setup stack (senza canary)
   yield* showStackCell(0, "...", "main()");
+
+  yield* beginSlide("BO2: call ask_name");
 
   codeHighlight().y(cCodeStartY + 16 * cLineSpacing);
   yield* codeHighlight().opacity(1, 0.3); // ask_name()
+
+  yield* beginSlide("BO2: enter ask_name");
 
   yield* moveRSP(1);
   yield* showStackCell(1, "main+1", "return addr");
   yield* highlightCLine(7); // { di ask_name
 
+  yield* beginSlide("BO2: push rbp");
+
   yield* moveRSP(2);
   yield* showStackCell(2, "0x7FF0", "saved RBP");
   yield* moveRBP(2);
+  yield* highlightCLine(8);
+
+  yield* beginSlide("BO2: char name[16]");
 
   yield* moveRSP(4);
   yield* highlightCLine(9);
@@ -1072,18 +1081,21 @@ export default makeScene2D(function* (view) {
 
   yield* beginSlide("BO: printf overflow");
 
-  // printf - azione prima, poi evidenziatore
+  // printf - evidenziatore si sposta
+  yield* highlightCLine(10);
+
+  yield* beginSlide("BO: printf output");
+
+  // output appare
   yield* outputText().text("> Hello, AAAAAAAAAAAAAAAA...!", 0);
   yield* outputText().fill(YELLOW, 0);
   yield* outputText().opacity(1, 0.4);
-  yield* highlightCLine(10);
+  yield* highlightCLine(11);
 
   yield* beginSlide("BO: Hijacked Return");
 
+  // return; - flash + inscurisci celle, poi evidenziatore su win()
   yield* outputText().opacity(0, 0.3);
-
-  // return; -> ret legge &win()!
-  yield* highlightCLine(11);
 
   // Flash cella return address
   yield* all(
@@ -1092,10 +1104,6 @@ export default makeScene2D(function* (view) {
   );
   yield* all(stackCells[1].stroke(PURPLE, 0.3), stackCells[1].scale(1, 0.3));
 
-  // Esegue win()
-  yield* highlightCLine(0);
-  yield* codeHighlight().fill("#f4474780", 0.3);
-
   // Inscurisci celle stack (deallocate)
   for (let i = 1; i <= 4; i++) {
     yield* all(
@@ -1103,6 +1111,10 @@ export default makeScene2D(function* (view) {
       stackCellValues[i].fill(DIM_GRAY, 0.2),
     );
   }
+
+  // Poi evidenziatore su win()
+  yield* highlightCLine(0);
+  yield* codeHighlight().fill("#f4474780", 0.3);
 
   yield* beginSlide("BO: Canary Intro");
 
@@ -1117,17 +1129,24 @@ export default makeScene2D(function* (view) {
 
   // Reset stack
   yield* resetStackCells();
+  yield* moveRSP(0);
   yield* all(rbpArrow().opacity(0, 0.1), rbpLabel().opacity(0, 0.1));
 
   // Ri-setup stack CON canary
   yield* showStackCell(0, "...", "main()");
 
+  yield* beginSlide("CAN: call ask_name");
+
   codeHighlight().y(cCodeStartY + 16 * cLineSpacing);
   yield* codeHighlight().opacity(1, 0.3); // ask_name()
+
+  yield* beginSlide("CAN: enter ask_name");
 
   yield* moveRSP(1);
   yield* showStackCell(1, "main+1", "return addr");
   yield* highlightCLine(7); // { di ask_name
+
+  yield* beginSlide("CAN: push rbp");
 
   yield* moveRSP(2);
   yield* showStackCell(2, "0x7FF0", "saved RBP");
@@ -1136,6 +1155,9 @@ export default makeScene2D(function* (view) {
   // Store canary
   yield* showStackCell(3, "0xDEAD", "canary");
   yield* stackCells[3].stroke(GOLD, 0.3);
+  yield* highlightCLine(8);
+
+  yield* beginSlide("CAN: char name[16]");
 
   yield* moveRSP(5);
   yield* highlightCLine(9);
@@ -1155,7 +1177,7 @@ export default makeScene2D(function* (view) {
   yield* beginSlide("BO: Canary Overflow Canary");
 
   // Canary sovrascritta!
-  yield* overflowCell(3, "AAAAAAAA", "CANARY corrupted!", RED);
+  yield* overflowCell(3, "AAAAAAAA", "canary corrupted!", RED);
   yield* waitFor(0.3);
 
   yield* beginSlide("BO: Canary Overflow RBP");
@@ -1169,22 +1191,24 @@ export default makeScene2D(function* (view) {
   // Return address -> &win()
   yield* overflowCell(1, "win+0", "ret addr -> win()!", PURPLE);
 
-  yield* beginSlide("BO: Canary Check");
+  yield* beginSlide("BO: Canary printf");
 
-  // return; -> canary check
+  // printf - evidenziatore si sposta
+  yield* highlightCLine(10);
+
+  yield* beginSlide("BO: Canary printf output");
+
+  // output appare
+  yield* outputText().text("> Hello, AAAAAAAAAAAAAAAA...!", 0);
+  yield* outputText().fill(YELLOW, 0);
+  yield* outputText().opacity(1, 0.4);
   yield* highlightCLine(11);
 
-  // Load corrupted canary -> RAX
+  yield* beginSlide("BO: Canary Return");
 
-  // MISMATCH: RAX = AAAAAAAA vs R8 = 0xDEAD
-
-
-  yield* beginSlide("BO: stack_chk_fail");
-
-  // Canary check FAILED
+  // return; -> canary check failed
+  yield* outputText().opacity(0, 0.3);
   yield* codeHighlight().fill("#f4474780", 0.3);
-
-  // Messaggio errore sotto il codice C
   yield* outputText().text("*** stack smashing detected ***", 0);
   yield* outputText().fill(RED, 0);
   yield* outputText().opacity(1, 0.4);
