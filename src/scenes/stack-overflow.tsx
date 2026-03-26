@@ -89,6 +89,16 @@ export default makeScene2D(function* (view) {
   const crashBg = createRef<Rect>();
   const outputText = createRef<Txt>();
 
+  // Memory layout diagram
+  const memSections = createRefArray<Rect>();
+  const memAddrTop = createRef<Txt>();
+  const memAddrBottom = createRef<Txt>();
+  const memGapLine = createRef<Rect>();
+  const stackArrow1 = createRef<Line>();
+  const stackArrow2 = createRef<Line>();
+  const heapArrow1 = createRef<Line>();
+  const heapArrow2 = createRef<Line>();
+
   // ============ ELEMENTI STACK ============
 
   view.add(
@@ -523,6 +533,198 @@ export default makeScene2D(function* (view) {
       width={1920}
       height={1080}
       fill={RED}
+      opacity={0}
+    />,
+  );
+
+  // ============ MEMORY LAYOUT DIAGRAM ============
+
+  const memColX = 0;
+  const memWidth = 380;
+  const memAddrX = memColX + memWidth / 2 + 80;
+
+  // Sezioni: nome, descrizione, altezza, colore fill, colore bordo, y center
+  const memSectionData = [
+    {
+      title: "OS Kernel Space",
+      desc: "User code cannot read/write\nSegmentation Fault",
+      h: 80,
+      fill: "#5D1A1A",
+      stroke: "#8B0000",
+      yCenter: -229,
+    },
+    {
+      title: "Stack",
+      desc: "Automatic variables,\nreturn address, etc.\n(grows towards lower addresses)",
+      h: 100,
+      fill: "#1B3A1B",
+      stroke: "#4CAF50",
+      yCenter: -131,
+    },
+    {
+      title: "Heap",
+      desc: "Dynamic memory allocation\nmalloc / new / free / delete\n(grows towards higher addresses)",
+      h: 90,
+      fill: "#3A2A00",
+      stroke: "#FFB300",
+      yCenter: 20,
+    },
+    {
+      title: "BSS",
+      desc: "Uninitialized static variables\nfilled with zeros",
+      h: 60,
+      fill: "#3A2200",
+      stroke: "#FF9800",
+      yCenter: 103,
+    },
+    {
+      title: "Data",
+      desc: "Static variables\nexplicitly initialized",
+      h: 60,
+      fill: "#2A1A3A",
+      stroke: "#CE93D8",
+      yCenter: 171,
+    },
+    {
+      title: "Text",
+      desc: "Binary image of the process\n(e.g., /bin/ls)",
+      h: 60,
+      fill: "#1A1A3A",
+      stroke: "#7E57C2",
+      yCenter: 239,
+    },
+  ];
+
+  memSectionData.forEach((sec) => {
+    view.add(
+      <Rect
+        ref={memSections}
+        width={memWidth}
+        height={sec.h}
+        layout
+        direction={"column"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        gap={4}
+        fill={sec.fill}
+        stroke={sec.stroke}
+        lineWidth={2}
+        radius={6}
+        x={memColX}
+        y={sec.yCenter}
+        opacity={0}
+      >
+        <Txt text={sec.title} fontSize={20} fill={"#ffffff"} fontWeight={700} />
+        <Txt text={sec.desc} fontSize={12} fill={"#cccccc"} fontFamily={"monospace"} textAlign={"center"} />
+      </Rect>,
+    );
+  });
+
+  // Indirizzi
+  view.add(
+    <Txt
+      ref={memAddrTop}
+      text="0xFFFFFFFF"
+      fontSize={16}
+      fill={DIM_GRAY}
+      fontFamily={"monospace"}
+      fontWeight={600}
+      x={memAddrX}
+      y={-275}
+      opacity={0}
+    />,
+  );
+
+  view.add(
+    <Txt
+      ref={memAddrBottom}
+      text="0x00000000"
+      fontSize={16}
+      fill={DIM_GRAY}
+      fontFamily={"monospace"}
+      fontWeight={600}
+      x={memAddrX}
+      y={275}
+      opacity={0}
+    />,
+  );
+
+  // Gap tratteggiato tra Stack e Heap (box vuota)
+  view.add(
+    <Rect
+      ref={memGapLine}
+      width={memWidth}
+      height={40}
+      fill={"#00000000"}
+      stroke={DIM_GRAY}
+      lineWidth={2}
+      lineDash={[8, 6]}
+      radius={6}
+      x={memColX}
+      y={-53}
+      opacity={0}
+    />,
+  );
+
+  // Frecce Stack (verso il basso ↓) - ai lati del box
+  const stackSecY = -131;
+  const arrowOffsetX = memWidth / 2 + 20;
+  view.add(
+    <Line
+      ref={stackArrow1}
+      points={[
+        [memColX - arrowOffsetX, stackSecY - 20],
+        [memColX - arrowOffsetX, stackSecY + 40],
+      ]}
+      stroke={"#4CAF50"}
+      lineWidth={3}
+      endArrow
+      arrowSize={14}
+      opacity={0}
+    />,
+  );
+  view.add(
+    <Line
+      ref={stackArrow2}
+      points={[
+        [memColX + arrowOffsetX, stackSecY - 20],
+        [memColX + arrowOffsetX, stackSecY + 40],
+      ]}
+      stroke={"#4CAF50"}
+      lineWidth={3}
+      endArrow
+      arrowSize={14}
+      opacity={0}
+    />,
+  );
+
+  // Frecce Heap (verso l'alto ↑) - ai lati del box
+  const heapSecY = 20;
+  view.add(
+    <Line
+      ref={heapArrow1}
+      points={[
+        [memColX - arrowOffsetX, heapSecY + 25],
+        [memColX - arrowOffsetX, heapSecY - 30],
+      ]}
+      stroke={"#FFB300"}
+      lineWidth={3}
+      endArrow
+      arrowSize={14}
+      opacity={0}
+    />,
+  );
+  view.add(
+    <Line
+      ref={heapArrow2}
+      points={[
+        [memColX + arrowOffsetX, heapSecY + 25],
+        [memColX + arrowOffsetX, heapSecY - 30],
+      ]}
+      stroke={"#FFB300"}
+      lineWidth={3}
+      endArrow
+      arrowSize={14}
       opacity={0}
     />,
   );
@@ -1044,4 +1246,33 @@ export default makeScene2D(function* (view) {
   yield* phaseSubtitle().opacity(1, 0.5);
 
   yield* beginSlide("BO: End");
+
+  // ==========================================
+  // MEMORY LAYOUT DIAGRAM
+  // ==========================================
+
+  // Fade out lezione finale
+  yield* all(
+    phaseTitle().opacity(0, 0.4),
+    phaseSubtitle().opacity(0, 0.4),
+  );
+
+  // Fade in tutto il memory layout in una singola slide
+  yield* all(
+    // Indirizzi
+    memAddrTop().opacity(1, 0.5),
+    memAddrBottom().opacity(1, 0.5),
+    // Tutte le sezioni (titolo e desc sono figli del Rect)
+    ...memSectionData.map((_, i) => memSections[i].opacity(1, 0.5)),
+    // Gap tratteggiato
+    memGapLine().opacity(1, 0.5),
+    // Frecce stack ↓
+    stackArrow1().opacity(1, 0.5),
+    stackArrow2().opacity(1, 0.5),
+    // Frecce heap ↑
+    heapArrow1().opacity(1, 0.5),
+    heapArrow2().opacity(1, 0.5),
+  );
+
+  yield* beginSlide("Mem: Full Layout");
 });
